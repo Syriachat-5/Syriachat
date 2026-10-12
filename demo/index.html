@@ -1,0 +1,141 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>محادثاتي</title><style>
+:root{--bg:#fff;--bg2:#eef1f4;--tx:#111;--mu:#6b7280;--pr:#2aabee;--me:#d7f0ff;--bd:#e5e7eb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17212b;--bg2:#0e1621;--tx:#f1f5f9;--mu:#8b9bab;--me:#2b5278;--bd:#243447}}
+:root[data-theme="dark"]{--bg:#17212b;--bg2:#0e1621;--tx:#f1f5f9;--mu:#8b9bab;--me:#2b5278;--bd:#243447}
+*{box-sizing:border-box;margin:0;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif}
+html,body{height:100%;background:var(--bg);color:var(--tx)}
+#app{height:100%;display:flex;flex-direction:column;max-width:560px;margin:auto;position:relative;overflow:hidden}
+.hd{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--pr);color:#fff}
+.hd button{background:none;border:0;color:#fff;font-size:20px;padding:4px 8px}
+.gr{flex:1;font-size:17px}
+.av{width:42px;height:42px;border-radius:50%;background:var(--pr);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.hd .av{background:#ffffff40}
+.tabs{display:flex;background:var(--pr)}
+.tabs button{flex:1;padding:10px;background:none;border:0;color:#ffffffb0;border-bottom:3px solid transparent;font-size:15px}
+.tabs .on{color:#fff;border-color:#fff}
+.list{flex:1;overflow:auto}
+.row{display:flex;gap:12px;padding:10px 14px;align-items:center;border-bottom:1px solid var(--bd)}
+.row .t{flex:1;min-width:0}
+.row p{color:var(--mu);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row small,.mu{color:var(--mu)}
+.fab{position:absolute;left:16px;bottom:16px;width:54px;height:54px;border-radius:50%;border:0;background:var(--pr);color:#fff;font-size:24px;box-shadow:0 3px 10px #0004}
+.msgs{flex:1;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:6px;background:var(--bg2)}
+.b{max-width:80%;padding:7px 10px;border-radius:12px;background:var(--bg);align-self:flex-end;word-break:break-word}
+.b.me{background:var(--me);align-self:flex-start}
+.b small{display:block;color:var(--pr);font-weight:700}
+.b em{display:block;font-size:11px;color:var(--mu);font-style:normal;text-align:end}
+.cp{display:flex;gap:6px;padding:8px;border-top:1px solid var(--bd);background:var(--bg)}
+input,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font-size:16px}
+.cp input{flex:1}.cp button{background:none;border:0;font-size:22px;color:var(--pr)}
+.pad{padding:14px;overflow:auto;flex:1;display:grid;gap:10px;align-content:start}
+.card{background:var(--bg2);border-radius:12px;padding:12px;display:grid;gap:8px}
+.ac{display:flex;gap:6px;flex-wrap:wrap}
+.btn{background:var(--pr);color:#fff;border:0;border-radius:10px;padding:11px 14px;font-size:15px}
+.btn.s{padding:6px 10px;font-size:13px}.btn.r{background:#e5484d}.btn.g{background:var(--mu)}
+.sh{position:absolute;inset:0;background:#0007;display:flex;align-items:flex-end;z-index:9}
+.sh>div{background:var(--bg);width:100%;padding:14px;border-radius:16px 16px 0 0;display:grid;gap:8px}
+.vb{width:16px;height:16px;vertical-align:-3px;margin-inline-start:3px}
+.sw{display:flex;justify-content:space-between;align-items:center}
+.sw input{width:22px;height:22px}
+.err{color:#e5484d}.c{text-align:center}
+.tg{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);background:#000c;color:#fff;padding:8px 14px;border-radius:20px;z-index:20;font-size:14px}
+</style></head><body><div id="app"></div><script>
+const K='tgdb1',$=id=>document.getElementById(id),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9),tm=t=>new Date(t).toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});
+const tick='<svg class="vb" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#2aabee"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function seed(){const mk=(i,n,v)=>({id:i,name:n,user:i,pass:'1234',bio:'',bal:500,verified:v,vreq:false,banned:false,demo:!v,contacts:[]});
+return{users:[mk('team','فريق التطبيق',1),mk('sara','سارة',0),mk('khaled','خالد',0),mk('layla','ليلى',0),mk('omar','عمر',0)],chats:[],cfg:{appName:'محادثاتي',reg:true,groups:true,pay:true,pin:'1234'},me:null,accounts:[],dark:matchMedia('(prefers-color-scheme:dark)').matches,notif:true}}
+function load(){try{const s=localStorage.getItem(K);if(s)return JSON.parse(s)}catch(e){}return seed()}
+let D=load(),S={v:'auth',mode:'login',tab:'all',at:'stats'};
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(D))}catch(e){}};
+const U=id=>D.users.find(u=>u.id==id),me=()=>U(D.me),C=id=>D.chats.find(c=>c.id==id);
+const nm=u=>u?esc(u.name)+(u.verified?tick:''):'محذوف',ini=s=>esc(String(s).trim()[0]||'؟');
+const nav=(v,o)=>{Object.assign(S,{v,sheet:null},o||{});render()};
+function toast(t){const e=document.createElement('div');e.className='tg';e.textContent=t;$('app').appendChild(e);setTimeout(()=>e.remove(),2200)}
+const other=c=>U(c.members.find(i=>i!=D.me));
+const title=c=>c.type=='group'?esc(c.name):nm(other(c));
+const plain=c=>c.type=='group'?c.name:(other(c)||{name:'؟'}).name;
+function vis(c){return c.msgs.filter(x=>!(x.hid&&x.hid.includes(D.me)))}
+function prev(c){const m=vis(c).slice(-1)[0];return m?(m.del?'🚫 رسالة محذوفة':m.pay?'💸 دفعة '+m.pay:esc(m.text)):'لا توجد رسائل'}
+function mine(){return D.chats.filter(c=>c.members.includes(D.me)&&!(c.gone&&c.gone[D.me]))}
+function openPriv(id){let c=D.chats.find(c=>c.type=='private'&&c.members.includes(id)&&c.members.includes(D.me));if(!c){c={id:uid(),type:'private',members:[D.me,id],msgs:[],gone:{}};D.chats.push(c)}if(c.gone)delete c.gone[D.me];save();nav('chat',{chat:c.id})}
+function enter(u){D.me=u.id;if(!D.accounts.includes(u.id))D.accounts.push(u.id);save();nav('list',{tab:'all'})}
+function doLogin(){const u=D.users.find(x=>x.user==$('lu').value.trim().toLowerCase()&&x.pass==$('lp').value);if(!u)return toast('بيانات غير صحيحة');if(u.banned)return toast('هذا الحساب محظور');enter(u)}
+function doReg(){const n=$('rn').value.trim(),us=$('ru').value.trim().toLowerCase(),p=$('rp').value;
+if(!D.cfg.reg)return toast('التسجيل متوقف حالياً');if(!n||p.length<4)return toast('الاسم مطلوب وكلمة السر 4 أحرف على الأقل');
+if(!/^[a-z0-9_]{3,20}$/.test(us))return toast('اسم المستخدم: 3-20 حرفاً إنجليزياً أو أرقاماً');if(U(us))return toast('اسم المستخدم مستخدم');
+const u={id:us,name:n,user:us,pass:p,bio:'',bal:100,verified:false,vreq:false,banned:false,contacts:['sara','khaled','layla','omar']};D.users.push(u);
+D.chats.push({id:uid(),type:'private',members:['team',us],msgs:[{id:uid(),from:'team',text:'أهلاً '+n+'! مرحباً بك في '+D.cfg.appName,t:Date.now()}],gone:{}});enter(u)}
+function send(){const c=C(S.chat),t=$('ti').value.trim();if(!t)return;c.gone={};c.msgs.push({id:uid(),from:D.me,text:t,t:Date.now()});save();render();$('ti').focus();
+const o=c.type=='private'&&other(c);if(o&&o.demo)setTimeout(()=>{c.msgs.push({id:uid(),from:o.id,text:'تم الاستلام 👍',t:Date.now()});save();if(S.chat==c.id&&S.v=='chat')render()},1500)}
+function pay(){const c=C(S.chat),a=Math.floor(+$('pa').value),m=me(),o=other(c);if(!(a>0))return toast('أدخل مبلغاً صحيحاً');if(a>m.bal)return toast('رصيدك لا يكفي');
+m.bal-=a;o.bal+=a;c.msgs.push({id:uid(),from:m.id,pay:a,t:Date.now()});save();nav('chat');toast('تم التحويل')}
+function msgDel(id,all){const c=C(S.chat),m=c.msgs.find(x=>x.id==id);if(all){m.del=true;delete m.text;delete m.pay}else{(m.hid=m.hid||[]).push(D.me)}save();nav('chat')}
+function chatDel(){const c=C(S.chat);(c.gone=c.gone||{})[D.me]=true;save();nav('list')}
+function addContact(){const us=$('cu').value.trim().toLowerCase().replace('@',''),u=U(us),m=me();if(!u||u.id==m.id)return toast('المستخدم غير موجود');m.contacts=m.contacts||[];if(!m.contacts.includes(u.id))m.contacts.push(u.id);save();openPriv(u.id)}
+function mkGroup(){const n=$('gn').value.trim(),sel=[...document.querySelectorAll('.gc:checked')].map(x=>x.value);if(!n||!sel.length)return toast('اكتب اسم المجموعة واختر عضواً');
+const c={id:uid(),type:'group',name:n,members:[D.me,...sel],msgs:[{id:uid(),from:D.me,text:'تم إنشاء المجموعة',t:Date.now()}],gone:{}};D.chats.push(c);save();nav('chat',{chat:c.id})}
+function saveProf(){const m=me();m.name=$('sn').value.trim()||m.name;m.bio=$('sb').value.trim();save();toast('تم الحفظ')}
+function reqV(){me().vreq=true;save();render()}
+function switchAcc(id){D.me=id;save();nav('list')}
+function logout(){D.accounts=D.accounts.filter(i=>i!=D.me);D.me=D.accounts[0]||null;save();nav(D.me?'list':'auth',{mode:'login'})}
+/* الإدارة */
+function admIn(){if($('ap').value==D.cfg.pin)nav('admin',{adm:1});else toast('رمز خاطئ')}
+const tv=id=>{const u=U(id);u.verified=!u.verified;u.vreq=false;save();render()},tb=id=>{const u=U(id);u.banned=!u.banned;save();render()};
+function du(id){D.users=D.users.filter(u=>u.id!=id);D.chats=D.chats.filter(c=>!(c.type=='private'&&c.members.includes(id)));D.chats.forEach(c=>c.members=c.members.filter(i=>i!=id));if(D.me==id)D.me=null;D.accounts=D.accounts.filter(i=>i!=id);save();render()}
+const dc=id=>{D.chats=D.chats.filter(c=>c.id!=id);save();render()};
+function bal(id,sign){const a=Math.floor(+$('ba').value);if(!(a>0))return toast('مبلغ غير صحيح');const u=U(id);u.bal=Math.max(0,u.bal+sign*a);save();nav('admin')}
+function rej(id){U(id).vreq=false;save();render()}
+function cfgT(k){D.cfg[k]=!D.cfg[k];save();render()}
+function bcast(){const t=$('bc').value.trim();if(!t)return;D.users.filter(u=>u.id!='team'&&!u.demo).forEach(u=>{let c=D.chats.find(c=>c.type=='private'&&c.members.includes('team')&&c.members.includes(u.id));if(!c){c={id:uid(),type:'private',members:['team',u.id],msgs:[],gone:{}};D.chats.push(c)}if(c.gone)delete c.gone[u.id];c.msgs.push({id:uid(),from:'team',text:t,t:Date.now()})});save();$('bc').value='';toast('تم الإرسال للجميع')}
+function cfgS(){D.cfg.appName=$('an').value.trim()||D.cfg.appName;if($('np').value.length>=4)D.cfg.pin=$('np').value;save();toast('تم الحفظ');render()}
+function reset(){if(!S.rs){S.rs=1;render();return}localStorage.removeItem(K);D=seed();S={v:'auth',mode:'login',tab:'all',at:'stats'};render()}
+const sw=(k,l)=>`<div class="sw"><span>${l}</span><input type="checkbox" ${D.cfg[k]?'checked':''} onchange="cfgT('${k}')"></div>`;
+const V={
+auth(){const r=S.mode=='reg';return`<div class="pad" style="margin-top:8vh"><h2 class="c" style="color:var(--pr)">${esc(D.cfg.appName)}</h2>
+${r?'<input id="rn" placeholder="الاسم"><input id="ru" placeholder="اسم المستخدم (إنجليزي)" dir="ltr"><input id="rp" type="password" placeholder="كلمة السر" dir="ltr"><button class="btn" onclick="doReg()">إنشاء حساب</button><a class="c mu" onclick="S.mode=\'login\';render()">لدي حساب</a>'
+:'<input id="lu" placeholder="اسم المستخدم" dir="ltr"><input id="lp" type="password" placeholder="كلمة السر" dir="ltr"><button class="btn" onclick="doLogin()">دخول</button><a class="c mu" onclick="S.mode=\'reg\';render()">إنشاء حساب جديد</a><p class="c mu" style="font-size:13px">حسابات تجريبية: sara / khaled / layla / omar — كلمة السر 1234</p>'}
+${D.me?'<button class="btn g" onclick="nav(\'settings\')">رجوع</button>':''}<a class="c mu" onclick="nav('admin')" style="margin-top:20px">لوحة الإدارة</a></div>`},
+list(){const m=me();let l=mine().filter(c=>S.tab=='all'||(S.tab=='priv')==(c.type=='private')).sort((a,b)=>((vis(b).slice(-1)[0]||{}).t||0)-((vis(a).slice(-1)[0]||{}).t||0));
+return`<div class="hd"><button onclick="nav('settings')">☰</button><b class="gr">${esc(D.cfg.appName)}</b></div>
+<div class="tabs">${[['all','الكل'],['priv','خاصة'],['grp','مجموعات']].map(t=>`<button class="${S.tab==t[0]?'on':''}" onclick="S.tab='${t[0]}';render()">${t[1]}</button>`).join('')}</div>
+<div class="list">${l.map(c=>{const lm=vis(c).slice(-1)[0];return`<div class="row" onclick="nav('chat',{chat:'${c.id}'})"><div class="av">${ini(plain(c))}</div><div class="t"><b>${title(c)}</b>${c.type=='group'?' <small>👥</small>':''}<p>${prev(c)}</p></div><small>${lm?tm(lm.t):''}</small></div>`}).join('')||'<p class="c mu" style="margin-top:40px">لا توجد محادثات</p>'}</div>
+<button class="fab" onclick="nav('new')">✎</button>`},
+chat(){const c=C(S.chat);if(!c)return V.list();const pr=c.type=='private';
+return`<div class="hd"><button onclick="nav('list')">→</button><div class="av">${ini(plain(c))}</div><b class="gr">${title(c)}</b><button onclick="S.sheet={t:'dc'};render()">🗑</button></div>
+<div id="msgs" class="msgs">${vis(c).map(x=>{const mi=x.from==D.me;return`<div class="b ${mi?'me':''}" onclick="S.sheet={t:'msg',id:'${x.id}'};render()">${!pr&&!mi?`<small>${nm(U(x.from))}</small>`:''}${x.del?'<i class="mu">🚫 رسالة محذوفة</i>':x.pay?`<b>💸 دفعة ${x.pay}</b>`:esc(x.text)}<em>${tm(x.t)}</em></div>`}).join('')}</div>
+<div class="cp">${pr&&D.cfg.pay?'<button onclick="S.sheet={t:\'pay\'};render()">💸</button>':''}<input id="ti" placeholder="اكتب رسالة" onkeydown="if(event.key==\'Enter\')send()"><button onclick="send()">➤</button></div>`},
+new(){const m=me(),cs=(m.contacts||[]).map(U).filter(u=>u&&!u.banned);
+return`<div class="hd"><button onclick="nav('list')">→</button><b class="gr">محادثة جديدة</b></div><div class="list">
+${D.cfg.groups?'<div class="row" onclick="nav(\'group\')"><div class="av">👥</div><b>مجموعة جديدة</b></div>':''}
+<div class="pad"><b>إضافة جهة اتصال</b><input id="cu" placeholder="اسم المستخدم" dir="ltr"><button class="btn" onclick="addContact()">إضافة وبدء محادثة</button></div>
+${cs.map(u=>`<div class="row" onclick="openPriv('${u.id}')"><div class="av">${ini(u.name)}</div><b>${nm(u)}</b></div>`).join('')}</div>`},
+group(){const cs=(me().contacts||[]).map(U).filter(Boolean);
+return`<div class="hd"><button onclick="nav('new')">→</button><b class="gr">مجموعة جديدة</b></div><div class="pad"><input id="gn" placeholder="اسم المجموعة">
+${cs.map(u=>`<label class="sw"><span>${nm(u)}</span><input type="checkbox" class="gc" value="${u.id}"></label>`).join('')}<button class="btn" onclick="mkGroup()">إنشاء</button></div>`},
+settings(){const m=me();if(!m)return V.auth();
+return`<div class="hd"><button onclick="nav('list')">→</button><b class="gr">الإعدادات</b></div><div class="pad">
+<div class="card"><div class="ac"><div class="av">${ini(m.name)}</div><div><b>${nm(m)}</b><br><small class="mu">@${esc(m.user)} · الرصيد ${m.bal}</small></div></div>
+<input id="sn" value="${esc(m.name)}" placeholder="الاسم"><input id="sb" value="${esc(m.bio)}" placeholder="نبذة"><button class="btn" onclick="saveProf()">حفظ</button></div>
+<div class="card"><b>توثيق الحساب</b>${m.verified?'<span>حسابك موثّق '+tick+'</span>':m.vreq?'<span class="mu">طلب التوثيق قيد المراجعة</span>':'<button class="btn" onclick="reqV()">طلب العلامة الزرقاء</button>'}</div>
+<div class="card"><label class="sw"><span>الوضع الداكن</span><input type="checkbox" ${D.dark?'checked':''} onchange="D.dark=!D.dark;save();render()"></label><label class="sw"><span>الإشعارات</span><input type="checkbox" ${D.notif?'checked':''} onchange="D.notif=!D.notif;save()"></label></div>
+<div class="card"><b>الحسابات</b>${D.accounts.map(U).filter(Boolean).map(u=>`<div class="sw"><span>${nm(u)}${u.id==m.id?' ✔':''}</span>${u.id==m.id?'':`<button class="btn s" onclick="switchAcc('${u.id}')">تبديل</button>`}</div>`).join('')}
+<button class="btn g" onclick="nav('auth',{mode:'login'})">+ إضافة حساب</button><button class="btn r" onclick="logout()">تسجيل الخروج</button></div></div>`},
+admin(){if(!S.adm)return`<div class="hd"><button onclick="nav(D.me?'list':'auth')">→</button><b class="gr">لوحة الإدارة</b></div><div class="pad"><input id="ap" type="password" placeholder="رمز الإدارة" dir="ltr"><button class="btn" onclick="admIn()">دخول</button></div>`;
+const tabs=[['stats','إحصاءات'],['users','المستخدمون'],['chats','المحادثات'],['ver','التوثيق'],['cfg','الإعدادات']];let b='';
+if(S.at=='stats'){const ms=D.chats.reduce((a,c)=>a+c.msgs.length,0);b=`<div class="card">المستخدمون: ${D.users.length}<br>الموثّقون: ${D.users.filter(u=>u.verified).length}<br>محادثات خاصة: ${D.chats.filter(c=>c.type=='private').length}<br>مجموعات: ${D.chats.filter(c=>c.type=='group').length}<br>الرسائل: ${ms}<br>طلبات توثيق: ${D.users.filter(u=>u.vreq).length}</div>`}
+if(S.at=='users')b=D.users.map(u=>`<div class="card"><div><b>${nm(u)}</b> <small class="mu">@${esc(u.user)} · رصيد ${u.bal}${u.banned?' · محظور':''}</small></div><div class="ac"><button class="btn s" onclick="tv('${u.id}')">${u.verified?'إلغاء التوثيق':'توثيق'}</button><button class="btn s g" onclick="S.sheet={t:'bal',id:'${u.id}'};render()">رصيد</button><button class="btn s g" onclick="tb('${u.id}')">${u.banned?'فك الحظر':'حظر'}</button><button class="btn s r" onclick="du('${u.id}')">حذف</button></div></div>`).join('');
+if(S.at=='chats')b=D.chats.map(c=>`<div class="card"><div>${c.type=='group'?'👥 '+esc(c.name):'💬 '+c.members.map(i=>esc((U(i)||{name:'؟'}).name)).join(' ⇄ ')} <small class="mu">${c.msgs.length} رسالة</small></div><button class="btn s r" onclick="dc('${c.id}')">حذف المحادثة</button></div>`).join('')||'<p class="c mu">لا توجد محادثات</p>';
+if(S.at=='ver')b=D.users.filter(u=>u.vreq).map(u=>`<div class="card"><b>${nm(u)}</b><div class="ac"><button class="btn s" onclick="tv('${u.id}')">قبول</button><button class="btn s g" onclick="rej('${u.id}')">رفض</button></div></div>`).join('')||'<p class="c mu">لا توجد طلبات</p>';
+if(S.at=='cfg')b=`<div class="card">${sw('reg','السماح بالتسجيل')}${sw('groups','السماح بالمجموعات')}${sw('pay','تفعيل الدفع')}<input id="an" value="${esc(D.cfg.appName)}" placeholder="اسم التطبيق"><input id="np" type="password" placeholder="رمز إدارة جديد (اختياري)" dir="ltr"><button class="btn" onclick="cfgS()">حفظ</button></div>
+<div class="card"><b>رسالة للجميع</b><textarea id="bc" rows="3"></textarea><button class="btn" onclick="bcast()">إرسال</button></div><button class="btn r" onclick="reset()">${S.rs?'اضغط مرة أخرى لتأكيد مسح كل البيانات':'مسح كل البيانات'}</button>`;
+return`<div class="hd"><button onclick="S.adm=0;nav(D.me?'list':'auth')">→</button><b class="gr">لوحة الإدارة</b></div><div class="tabs" style="overflow:auto">${tabs.map(t=>`<button class="${S.at==t[0]?'on':''}" style="white-space:nowrap" onclick="S.at='${t[0]}';S.rs=0;render()">${t[1]}</button>`).join('')}</div><div class="pad">${b}</div>`}};
+function sheet(){const h=S.sheet,x=(h.t=='msg'?C(S.chat).msgs.find(m=>m.id==h.id):0);let b='';
+if(h.t=='msg'){b=`<button class="btn g" onclick="msgDel('${h.id}',0)">حذف عندي</button>`+(x&&x.from==D.me&&!x.del?`<button class="btn r" onclick="msgDel('${h.id}',1)">حذف للجميع</button>`:'')}
+if(h.t=='dc')b='<b>حذف هذه المحادثة من حسابك؟</b><button class="btn r" onclick="chatDel()">حذف المحادثة</button>';
+if(h.t=='pay')b=`<b>تحويل رصيد (رصيدك ${me().bal})</b><input id="pa" type="number" inputmode="numeric" placeholder="المبلغ"><button class="btn" onclick="pay()">إرسال</button>`;
+if(h.t=='bal')b=`<b>تعديل رصيد ${esc(U(h.id).name)}</b><input id="ba" type="number" inputmode="numeric" placeholder="المبلغ"><div class="ac"><button class="btn" onclick="bal('${h.id}',1)">إضافة</button><button class="btn r" onclick="bal('${h.id}',-1)">سحب</button></div>`;
+return`<div class="sh" onclick="if(event.target==this){S.sheet=null;render()}"><div>${b}<button class="btn g" onclick="S.sheet=null;render()">إلغاء</button></div></div>`}
+function render(){document.documentElement.dataset.theme=D.dark?'dark':'light';const h=(V[S.v]||V.auth)();$('app').innerHTML=h+(S.sheet?sheet():'');const m=$('msgs');if(m)m.scrollTop=m.scrollHeight}
+if(D.me&&U(D.me)&&!U(D.me).banned)S.v='list';else D.me=null;render();
+</script></body></html>
