@@ -1,0 +1,12 @@
+{
+  "appId": "com.syriachat.app",
+  "appName": "SyriaChat",
+  "webDir": "www",
+  "server": {
+    "url": "https://syriachat-5.github.io/Syriachat/",
+    "cleartext": false
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}
