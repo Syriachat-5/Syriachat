@@ -264,3 +264,4 @@ function ui(){const m=me();if(m&&m.banned){auth.signOut();return toast('هذا �
 auth.onAuthStateChanged(u=>{un.forEach(f=>f());un=[];D.users=[];D.chats=[];if(u){D.me=u.uid;PM=null;S.pe=null;S.gc=0;if(S.v=='auth')S.v='list';listen(u.uid)}else{D.me=null;S.v='auth';S.mode='login';for(const k in PH)delete PH[k]}render()});
 fs.doc('cfg/app').get().then(s=>{if(s.exists){D.cfg={...D.cfg,...s.data()};if(S.v=='auth')render()}}).catch(()=>{});render();setInterval(()=>{if(D.me)ui()},30000);
 </script></body></html>
+
