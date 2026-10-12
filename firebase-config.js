@@ -1,9 +1,9 @@
-// الصق هنا إعدادات Firebase (Project settings > Your apps > Web app)
 window.FB_CONFIG={
-  apiKey:"",
-  authDomain:"",
-  projectId:"",
-  storageBucket:"",
-  messagingSenderId:"",
-  appId:""
+  apiKey:"AIzaSyAPkZK_YnsXOIje3y_S8o2kLlaFqg_mjnk",
+  authDomain:"syriachat-e10bd.firebaseapp.com",
+  projectId:"syriachat-e10bd",
+  storageBucket:"syriachat-e10bd.firebasestorage.app",
+  messagingSenderId:"883294497301",
+  appId:"1:883294497301:web:b5b15edcc0e0f9feaa3c1c",
+  measurementId:"G-7MYE44ZWHZ"
 };
