@@ -1,0 +1,598 @@
+# ملف تسليم مشروع "تطبيق محادثات شبيه تلجرام" (2026-10-12)
+
+## تعليمات لـ Claude الذي يستلم هذا الملف
+هذا سجل كامل لمشروع بُني في محادثة سابقة. تابع من حيث توقفنا. عند طلب المستخدم "أعد إرسال الملفات" أعد إنشاء كل ملف من القسم "الملفات" أدناه حرفياً (محتوى كل ملف بين سطري ~~~~~) وسلّمه كملف جاهز. لا تغيّر شيئاً إلا بطلب. أخبر المستخدم دائماً بوضوح ما فُحص وما لم يُفحص.
+
+## المستخدم
+- يكتب بالعربية، يعمل من الجوال فقط، يحب الشرح خطوة بخطوة (مع لقطات شاشة إن أمكن).
+- يفضّل أن تعدّل أنت الملفات وتسلّمها جاهزة، وأن يُقال بوضوح ما فُحص وما لم يُفحص دون ادعاء أن شيئاً يعمل قبل تجربته.
+- يريد إنهاء المشروع اليوم ورفعه على GitHub Pages، ومتابعته على هاتف آخر عند الحاجة.
+
+## تسلسل الطلبات
+1. تطبيق محادثات شبيه تلجرام عبر GitHub: إعدادات، مراسلات، إضافة حساب، دفع، حذف رسائل، حذف محادثات، فصل الخاص عن المجموعات، توثيق بعلامة زرقاء، جهات اتصال جديدة، ولوحة إدارة تتحكم بكل شيء. (بُنيت نسخة تجريبية محلية، موجودة في demo/ داخل الـzip.)
+2. ملف إدارة مستقل (admin.html).
+3. ربط كامل بـ Firebase: Auth (اسم المستخدم + @chat.local كبريد)، Firestore، قواعد أمان، وإدارة بحساب أدمن حقيقي (admin=true في وثيقة المستخدم).
+4. رمز رقمي (8 أرقام) لكل حساب يُنسخ ويُشارك ويُستخدم للبحث، تسجيل صوت، إرسال صور، مكالمة صوتية ومكالمة فيديو (WebRTC)، صورة بروفيل بخصوصية (عامة / أنا فقط / مخصصة)، وحالة (قصة).
+5. ملف فحص (test.html) لاختبار الإعداد والقواعد والأجهزة.
+6. تعديل الحالة: صور وفيديو، تبقى أسبوعاً، وطول الفيديو 5 دقائق كحد أقصى (الفيديو يُرفع إلى Firebase Storage؛ الصور تبقى base64 في Firestore). وأُضيف storage.rules.
+7. إعادة تصميم الواجهة لتشبه تلجرام حسب لقطات شاشة قدّمها المستخدم: قائمة محادثات بشرائح (الكل/خاص/المجموعات) وشارات غير مقروء محلية، شريط تنقل سفلي عائم (المحادثات، جهات الاتصال، الإعدادات، الملف الشخصي)، صفحة ملف شخصي (تعيين صورة، تعديل البيانات، الإعدادات، المنشورات)، وإعدادات بأقسام: الحساب، إعدادات المحادثات (ليلي، خلفية، حجم الخط)، الخصوصية والأمان، الإشعارات، البيانات والتخزين.
+8. حفظ الوسائط منفصل عن Firebase: ذاكرة الهاتف (IndexedDB) تُخزَّن فيها الصور والتسجيلات بعد أول تحميل (تُضبط من البيانات والتخزين)، وزر «حفظ في ملفات الهاتف» لتنزيل الملف إلى مجلد التنزيلات. Firebase يبقى مصدر المزامنة بين الأجهزة فقط.
+
+## الحالة الحالية
+- كل الملفات مكتوبة. فُحصت صياغة JavaScript فقط (node --check).
+- لم تُجرَّب أي ميزة على Firebase حي ولا على هاتف حقيقي (بيئة Claude بلا إنترنت). المتوقع ظهور أخطاء عند أول تجربة؛ على المستخدم تشغيل test.html ثم إرسال النتيجة.
+- لم يُنشأ مشروع Firebase بعد ولم تُملأ firebase-config.js. لا تستخدم مشروع محفظة بنك إدلب لأن قواعده ستُستبدل.
+- تفسير "خاصة" في صورة البروفيل = "أنا فقط".
+
+## الإعداد (من الجوال)
+1. console.firebase.google.com: مشروع جديد، ثم أضف تطبيق ويب وانسخ firebaseConfig إلى firebase-config.js.
+2. Authentication > Sign-in method: فعّل Email/Password. وفي Settings > Authorized domains أضف USERNAME.github.io
+3. Firestore Database > Create (Production)، ثم Rules: الصق firestore.rules ثم Publish.
+4. (للحالات بالفيديو فقط) Storage > Get started ثم Rules: الصق storage.rules ثم Publish. قد يتطلب Storage خطة Blaze (دفع حسب الاستخدام مع حد مجاني) حسب شروط Firebase الحالية.
+4ب. ارفع index.html و admin.html و firebase-config.js و test.html إلى مستودع GitHub وفعّل Pages.
+5. افتح test.html وانسخ النتيجة. ثم سجّل حساباً وغيّر admin و verified إلى true من وثيقتك في Firestore، وادخل admin.html.
+
+## حدود معروفة
+- الواجهة الجديدة جُرّبت في متصفح Chrome بدون واجهة (لقطات شاشة بمقاس هاتف) على النسخة التجريبية المحلية فقط، دون أخطاء JavaScript؛ لم تُجرَّب على Firebase حي ولا على هاتف حقيقي.
+- لم تُنفَّذ بعد أقسام: مجلدات المحادثات، الأجهزة، اللغة، المنشورات المؤرشفة، QR حقيقي (زر الرمز يفتح الرمز الرقمي)، إشعارات فورية خارج التطبيق. شارات غير المقروء محلية لكل جهاز.
+- المكالمات STUN فقط (قد تفشل على بعض شبكات الجوال؛ الحل لاحقاً: TURN).
+- الدفع/الرصيد افتراضي وغير آمن بالكامل (يحتاج Cloud Functions).
+- الرسائل مصفوفة داخل وثيقة المحادثة (حد 1MB)؛ الصور والصوت base64 داخل Firestore (مجموعة media) وتستهلك الحصة المجانية.
+- الإدارة لا تحذف الحالات ولا تعرض سجل المكالمات؛ حذف مستخدم يحذف وثيقته ومحادثاته فقط (احذف Auth من الكونسول).
+- الحالات تبقى أسبوعاً وتُخفى من الواجهة عند الانتهاء (المدة القصوى مفروضة في القواعد مع سماح 5 دقائق). طول الفيديو (5 دقائق) يُفحص في التطبيق فقط؛ قواعد Storage تفرض الحجم (150MB) ونوع الملف. ملف الفيديو يُستبدل عند نشر حالة جديدة (ملف واحد لكل مستخدم) ولا يُحذف تلقائياً بعد الأسبوع إلا باستبداله أو بحذف الحالة.
+
+## الخطوات التالية المقترحة
+تجربة بحسابين على هاتفين وإصلاح الأخطاء، ثم: TURN للمكالمات، حذف الحالات وسجل المكالمات في الإدارة، دفع آمن عبر Cloud Functions، فصل لوحة الإدارة في مستودع مستقل، إشعارات، ونقل الرسائل إلى مجموعة فرعية.
+
+## الملفات
+
+### index.html
+~~~~~
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>محادثاتي</title><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script><script src="firebase-config.js"></script><style>
+:root{--bg:#fff;--bg2:#eef1f4;--tx:#111;--mu:#6b7280;--pr:#2aabee;--me:#d7f0ff;--bd:#e5e7eb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17212b;--bg2:#0e1621;--tx:#f1f5f9;--mu:#8b9bab;--me:#2b5278;--bd:#243447}}
+:root[data-theme="dark"]{--bg:#17212b;--bg2:#0e1621;--tx:#f1f5f9;--mu:#8b9bab;--me:#2b5278;--bd:#243447}
+*{box-sizing:border-box;margin:0;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif}
+html,body{height:100%;background:var(--bg);color:var(--tx)}
+#app{height:100%;display:flex;flex-direction:column;max-width:560px;margin:auto;position:relative;overflow:hidden}
+.hd{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--pr);color:#fff}
+.hd button{background:none;border:0;color:#fff;font-size:20px;padding:4px 8px}
+.gr{flex:1;font-size:17px}
+.av{width:42px;height:42px;border-radius:50%;background:var(--pr);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.hd .av{background:#ffffff40}
+.tabs{display:flex;background:var(--pr)}
+.tabs button{flex:1;padding:10px;background:none;border:0;color:#ffffffb0;border-bottom:3px solid transparent;font-size:15px}
+.tabs .on{color:#fff;border-color:#fff}
+.list{flex:1;overflow:auto}
+.row{display:flex;gap:12px;padding:10px 14px;align-items:center;border-bottom:1px solid var(--bd)}
+.row .t{flex:1;min-width:0}
+.row p{color:var(--mu);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row small,.mu{color:var(--mu)}
+.fab{position:absolute;left:16px;bottom:16px;width:54px;height:54px;border-radius:50%;border:0;background:var(--pr);color:#fff;font-size:24px;box-shadow:0 3px 10px #0004}
+.msgs{flex:1;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:6px;background:var(--bg2)}
+.b{max-width:80%;padding:7px 10px;border-radius:12px;background:var(--bg);align-self:flex-end;word-break:break-word}
+.b.me{background:var(--me);align-self:flex-start}
+.b small{display:block;color:var(--pr);font-weight:700}
+.b em{display:block;font-size:11px;color:var(--mu);font-style:normal;text-align:end}
+.cp{display:flex;gap:6px;padding:8px;border-top:1px solid var(--bd);background:var(--bg)}
+input,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font-size:16px}
+.cp input{flex:1}.cp button{background:none;border:0;font-size:22px;color:var(--pr)}
+.pad{padding:14px;overflow:auto;flex:1;display:grid;gap:10px;align-content:start}
+.card{background:var(--bg2);border-radius:12px;padding:12px;display:grid;gap:8px}
+.ac{display:flex;gap:6px;flex-wrap:wrap}
+.btn{background:var(--pr);color:#fff;border:0;border-radius:10px;padding:11px 14px;font-size:15px}
+.btn.s{padding:6px 10px;font-size:13px}.btn.r{background:#e5484d}.btn.g{background:var(--mu)}
+.sh{position:absolute;inset:0;background:#0007;display:flex;align-items:flex-end;z-index:9}
+.sh>div{background:var(--bg);width:100%;padding:14px;border-radius:16px 16px 0 0;display:grid;gap:8px}
+.vb{width:16px;height:16px;vertical-align:-3px;margin-inline-start:3px}
+.sw{display:flex;justify-content:space-between;align-items:center}
+.sw input{width:22px;height:22px}
+.err{color:#e5484d}.c{text-align:center}
+.tg{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);background:#000c;color:#fff;padding:8px 14px;border-radius:20px;z-index:20;font-size:14px}
+:root{--bg:#f2f3f7;--bg2:#fff;--tx:#111827;--mu:#7d8590;--pr:#3390ec;--me:#e1f3ff;--bd:#e9ebf0;--chip:#e3eefb}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1621;--bg2:#17212b;--tx:#f1f5f9;--mu:#8b9bab;--me:#2b5278;--bd:#243447;--chip:#1f3a57}}
+:root[data-theme="dark"]{--bg:#0e1621;--bg2:#17212b;--tx:#f1f5f9;--mu:#8b9bab;--me:#2b5278;--bd:#243447;--chip:#1f3a57}
+.hd{background:var(--bg2);color:var(--tx);border-bottom:1px solid var(--bd)}.hd button,.hd a{color:var(--tx)}.hd .av{background:var(--pr);color:#fff}
+.top{display:flex;align-items:center;gap:8px;padding:12px 14px;flex:none}.top button{background:none;border:0;color:var(--tx);padding:6px;display:grid;place-items:center}
+.top svg,.nb svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ttl{font-size:24px;color:var(--pr);margin:0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%}.sp{flex:1}
+.chips{display:flex;gap:4px;margin:0 14px 8px;padding:5px;background:var(--bg2);border-radius:24px;overflow:auto;flex:none}
+.chips button{flex:1;border:0;background:none;color:var(--mu);padding:10px 12px;border-radius:20px;font-size:15px;white-space:nowrap}
+.chips .on{background:var(--chip);color:var(--pr)}.cn{background:var(--bd);color:var(--mu);border-radius:12px;padding:1px 8px;font-size:13px}
+.list{padding:0 4px 130px}.row{border:0;padding:10px 14px}.row .av{width:56px;height:56px;font-size:20px}
+.rt{display:grid;gap:6px;justify-items:start;align-self:stretch;padding-top:4px}
+.bd{background:var(--mu);color:#fff;border-radius:14px;padding:2px 9px;font-size:13px;min-width:26px;text-align:center}
+.av{background-size:cover;background-position:center}.av.sm{width:40px;height:40px}.av.xs{width:30px;height:30px;font-size:13px}
+.av.lg{width:110px;height:110px;font-size:40px;margin:10px auto}.av.xl{width:130px;height:130px;font-size:48px;margin:10px auto}
+.cam{position:absolute;bottom:0;right:0;width:38px;height:38px;border-radius:50%;background:var(--pr);display:grid;place-items:center;border:3px solid var(--bg)}.cam svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2}
+.scr{flex:1;overflow:auto;padding:0 14px 130px}.nm{margin:6px 0 2px;font-size:26px}
+.acts{display:flex;gap:10px;margin:16px 0}.acts div{flex:1;background:var(--bg2);border-radius:22px;padding:16px 4px;display:grid;justify-items:center;gap:8px;font-size:14px}.acts svg{width:28px;height:28px;stroke:var(--tx);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.card2{background:var(--bg2);border-radius:22px;padding:8px 6px;margin:0 0 14px;display:grid}.card2>div{padding:12px 14px}.card2 small{display:block;color:var(--mu);margin-top:2px}.card2 b{font-size:17px}
+.sec{color:var(--pr);font-weight:700}.srow,.arow{display:flex;align-items:center;gap:14px;padding:12px 14px}.srow .t{flex:1}.arow b{flex:1}
+.si{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;flex:none}.si svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nb{position:absolute;left:14px;right:14px;bottom:12px;background:var(--bg2);border-radius:30px;display:flex;direction:ltr;padding:6px;box-shadow:0 4px 20px #0003;z-index:8}
+.nb>div{flex:1;display:grid;justify-items:center;gap:2px;padding:8px 2px;border-radius:24px;color:var(--tx);font-size:12px}.nb>.on{background:var(--chip);color:var(--pr)}
+.fab{bottom:104px;left:18px;width:62px;height:62px;display:grid;place-items:center}.fab svg{width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fab2{position:absolute;left:24px;bottom:178px;width:50px;height:50px;border-radius:50%;border:0;background:var(--bg2);color:var(--tx);box-shadow:0 2px 8px #0003;display:grid;place-items:center}.fab2 svg{stroke:currentColor;fill:none;stroke-width:1.8;width:24px;height:24px}
+.b{background:var(--bg2)}.b.me{background:var(--me)}.cp{background:var(--bg2)}.sh>div{background:var(--bg2)}.pd{padding:0 14px 8px}
+</style></head><body><div id="app"></div><input id="fi" type="file" accept="image/*" hidden onchange="sendImg(this)"><input id="pf" type="file" accept="image/*" hidden onchange="pickPhoto(this)"><input id="sf" type="file" accept="image/*" hidden onchange="pickStory(this)"><input id="sv" type="file" accept="video/*" hidden onchange="pickVid(this)">
+<div id="callui" style="display:none;position:fixed;inset:0;background:#000;z-index:50;flex-direction:column;align-items:center;color:#fff"><div id="cn" style="padding:18px;font-size:18px;z-index:2"></div><video id="rv" autoplay playsinline style="width:100%;flex:1;min-height:0;object-fit:cover;background:#111"></video><video id="lv" autoplay playsinline muted style="position:absolute;top:70px;left:12px;width:90px;border-radius:10px;background:#333"></video><div style="padding:18px;display:flex;gap:16px"><button class="btn g" onclick="togMic()">🎙 كتم</button><button class="btn r" onclick="endCall()">إنهاء</button></div></div>
+<div id="inc" style="display:none;position:fixed;inset:0;background:#000d;z-index:60;flex-direction:column;align-items:center;justify-content:center;gap:18px;color:#fff"><div id="incn" style="font-size:20px"></div><div style="display:flex;gap:16px"><button class="btn" onclick="answerCall()">رد</button><button class="btn r" onclick="rejectCall()">رفض</button></div></div><script>
+const K='tgdb1',$=id=>document.getElementById(id),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9),tm=t=>new Date(t).toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});
+const tick='<svg class="vb" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#2aabee"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+firebase.initializeApp(window.FB_CONFIG);
+const auth=firebase.auth(),fs=firebase.firestore(),FV=firebase.firestore.FieldValue,em=u=>u+'@chat.local';
+let P={};try{P=JSON.parse(localStorage.getItem('tgp')||'{}')}catch(e){}
+let D={users:[],chats:[],cfg:{appName:'محادثاتي',reg:true,groups:true,pay:true},me:null,accounts:[],dark:P.dark!=null?P.dark:matchMedia('(prefers-color-scheme:dark)').matches,notif:P.notif!==false,auto:P.auto!==false,wp:P.wp||0,fs:P.fs||16},S={v:'auth',mode:'login',tab:'all'},un=[];
+const save=()=>{try{localStorage.setItem('tgp',JSON.stringify({dark:D.dark,notif:D.notif,auto:D.auto,wp:D.wp,fs:D.fs}))}catch(e){}};
+const U=id=>D.users.find(u=>u.id==id),me=()=>U(D.me),C=id=>D.chats.find(c=>c.id==id);
+const nm=u=>u?esc(u.name)+(u.verified?tick:''):'محذوف',ini=s=>esc(String(s).trim()[0]||'؟');
+const nav=(v,o)=>{Object.assign(S,{v,sheet:null},o||{});render()};
+function toast(t){const e=document.createElement('div');e.className='tg';e.textContent=t;$('app').appendChild(e);setTimeout(()=>e.remove(),2200)}
+const other=c=>U(c.members.find(i=>i!=D.me));
+const title=c=>c.type=='group'?esc(c.name):nm(other(c));
+const plain=c=>c.type=='group'?c.name:(other(c)||{name:'؟'}).name;
+function vis(c){return c.msgs.filter(x=>!(x.hid&&x.hid.includes(D.me)))}
+function prev(c){const m=vis(c).slice(-1)[0];return m?(m.del?'🚫 رسالة محذوفة':m.pay?'💸 دفعة '+m.pay:m.kind=='img'?'📷 صورة':m.kind=='aud'?'🎤 رسالة صوتية':esc(m.text)):'لا توجد رسائل'}
+function mine(){return D.chats.filter(c=>c.members.includes(D.me)&&!(c.gone&&c.gone[D.me]))}
+async function openPriv(id){let c=D.chats.find(c=>c.type=='private'&&c.members.includes(id)&&c.members.includes(D.me)),cid;
+try{if(!c){const r=await fs.collection('chats').add({type:'private',members:[D.me,id],msgs:[],gone:{}});cid=r.id}else{cid=c.id;if(c.gone&&c.gone[D.me])await fs.doc('chats/'+cid).update({['gone.'+D.me]:FV.delete()})}nav('chat',{chat:cid})}catch(e){toast('تعذر فتح المحادثة')}}
+async function doLogin(){try{await auth.signInWithEmailAndPassword(em($('lu').value.trim().toLowerCase()),$('lp').value)}catch(e){toast('بيانات غير صحيحة')}}
+async function doReg(){const n=$('rn').value.trim(),us=$('ru').value.trim().toLowerCase(),p=$('rp').value;
+if(!D.cfg.reg)return toast('التسجيل متوقف حالياً');if(!n||p.length<6)return toast('الاسم مطلوب وكلمة السر 6 أحرف على الأقل');
+if(!/^[a-z0-9_]{3,20}$/.test(us))return toast('اسم المستخدم: 3-20 حرفاً إنجليزياً أو أرقاماً');
+try{const r=await auth.createUserWithEmailAndPassword(em(us),p);await fs.doc('users/'+r.user.uid).set({code:await newCode(),name:n,user:us,bio:'',bal:100,verified:false,vreq:false,banned:false,admin:false,contacts:[]})}catch(e){toast(e.code=='auth/email-already-in-use'?'اسم المستخدم مستخدم':'تعذر التسجيل: '+e.code)}}
+async function send(){const c=C(S.chat),t=$('ti').value.trim();if(!t)return;$('ti').value='';const u={msgs:FV.arrayUnion({id:uid(),from:D.me,text:t,t:Date.now()})};Object.keys(c.gone||{}).forEach(k=>u['gone.'+k]=FV.delete());
+try{await fs.doc('chats/'+c.id).update(u)}catch(e){toast('تعذر الإرسال')}}
+async function pay(){const c=C(S.chat),a=Math.floor(+$('pa').value),o=other(c);if(!(a>0))return toast('أدخل مبلغاً صحيحاً');
+try{await fs.runTransaction(async t=>{const r1=fs.doc('users/'+D.me),r2=fs.doc('users/'+o.id),x=(await t.get(r1)).data();if(x.bal<a)throw'bal';const y=(await t.get(r2)).data();t.update(r1,{bal:x.bal-a});t.update(r2,{bal:y.bal+a});t.update(fs.doc('chats/'+c.id),{msgs:FV.arrayUnion({id:uid(),from:D.me,pay:a,t:Date.now()})})});nav('chat');toast('تم التحويل')}catch(e){toast(e=='bal'?'رصيدك لا يكفي':'تعذر التحويل')}}
+async function msgDel(id,all){const r=fs.doc('chats/'+S.chat);try{await fs.runTransaction(async t=>{const d=(await t.get(r)).data();t.update(r,{msgs:d.msgs.map(m=>{if(m.id!=id)return m;if(all){const{text,pay,mid,kind,...x}=m;return{...x,del:true}}return{...m,hid:[...(m.hid||[]),D.me]}})})})}catch(e){toast('تعذر الحذف')}nav('chat')}
+async function chatDel(){try{await fs.doc('chats/'+S.chat).update({['gone.'+D.me]:true})}catch(e){toast('تعذر الحذف')}nav('list')}
+async function addContact(){const us=$('cu').value.trim().toLowerCase().replace('@',''),u=D.users.find(x=>x.user==us||x.code==us);if(!u||u.id==D.me)return toast('المستخدم غير موجود');
+try{await fs.doc('users/'+D.me).update({contacts:FV.arrayUnion(u.id)});openPriv(u.id)}catch(e){toast('تعذرت الإضافة')}}
+async function mkGroup(){const n=$('gn').value.trim(),sel=[...document.querySelectorAll('.gc:checked')].map(x=>x.value);if(!n||!sel.length)return toast('اكتب اسم المجموعة واختر عضواً');
+try{const r=await fs.collection('chats').add({type:'group',name:n,members:[D.me,...sel],msgs:[{id:uid(),from:D.me,text:'تم إنشاء المجموعة',t:Date.now()}],gone:{}});nav('chat',{chat:r.id})}catch(e){toast('تعذر الإنشاء')}}
+function saveProf(){const m=me();fs.doc('users/'+D.me).update({name:$('sn').value.trim()||m.name,bio:$('sb').value.trim()}).then(()=>toast('تم الحفظ')).catch(()=>toast('تعذر الحفظ'))}
+function reqV(){fs.doc('users/'+D.me).update({vreq:true}).catch(()=>toast('تعذر الطلب'))}
+const logout=()=>auth.signOut();
+const MC={},PH={},MP={};let PM=null,REC=null,RT=0;
+const mb=x=>x.del?'<i class="mu">🚫 رسالة محذوفة</i>':x.pay?`<b>💸 دفعة ${x.pay}</b>`:x.kind=='img'?`<img data-mid="${x.mid}" style="max-width:100%;border-radius:8px;min-height:60px;background:var(--bg2)">`:x.kind=='aud'?`<audio controls data-mid="${x.mid}" onclick="event.stopPropagation()" style="max-width:100%"></audio>`:esc(x.text);
+const avc=c=>`<div class="av"${c.type=='private'&&other(c)?` data-u="${other(c).id}"`:''}>${ini(plain(c))}</div>`;
+function setAv(el,d){el.style.backgroundImage='url('+d+')';el.style.backgroundSize='cover';el.style.backgroundPosition='center';el.textContent=''}
+function hydrate(){document.querySelectorAll('[data-mid]').forEach(el=>{const id=el.dataset.mid;if(MC[id])el.src=MC[id];else if(!MP[id]){MP[id]=1;const set=v=>document.querySelectorAll('[data-mid="'+id+'"]').forEach(e=>e.src=v);lget('m:'+id).then(v=>{if(v){MC[id]=v;MP[id]=0;set(v);return}return fs.doc('media/'+id).get().then(x=>{if(x.exists){MC[id]=x.data().data;if(D.auto!==false)lset('m:'+id,MC[id]);set(MC[id])}MP[id]=0})}).catch(()=>{MP[id]=0})}});
+document.querySelectorAll('[data-u]').forEach(el=>{const id=el.dataset.u;if(PH[id])setAv(el,PH[id]);else if(PH[id]===undefined){PH[id]=null;fs.doc('photos/'+id).get().then(x=>{const d=x.exists&&x.data().data;if(d){PH[id]=d;document.querySelectorAll('[data-u="'+id+'"]').forEach(e=>setAv(e,d))}}).catch(()=>{})}})}
+function fb(t){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('تم النسخ')}catch(e){toast(t)}a.remove()}
+function cp(t){try{navigator.clipboard.writeText(t).then(()=>toast('تم النسخ'),()=>fb(t))}catch(e){fb(t)}}
+function shareCode(c){const t='رمزي في '+D.cfg.appName+': '+c;if(navigator.share)navigator.share({text:t}).catch(()=>{});else cp(t)}
+async function newCode(){for(let i=0;i<6;i++){const c=String(Math.floor(1e7+Math.random()*9e7));if((await fs.collection('users').where('code','==',c).get()).empty)return c}return String(Date.now()).slice(-8)}
+async function ensureCode(){const m=me();if(!m||m.code||S.gc)return;S.gc=1;try{await fs.doc('users/'+D.me).update({code:await newCode()})}catch(e){S.gc=0}}
+const PD=()=>S.pe||PM||{vis:'public',allow:[],data:''};
+function codeCard(m){return`<div class="card"><b>رمزي الرقمي</b>${m.code?`<b style="font-size:24px;letter-spacing:3px" dir="ltr">${m.code}</b><div class="ac"><button class="btn s" onclick="cp('${m.code}')">نسخ</button><button class="btn s g" onclick="shareCode('${m.code}')">مشاركة</button></div><small class="mu">أرسله لأصدقائك ليجدوك من «محادثة جديدة»</small>`:'<small class="mu">جارٍ إنشاء الرمز...</small>'}</div>`}
+function phCard(m){const p=PD(),cs=(m.contacts||[]).map(U).filter(Boolean),k=S.pe&&S.pe.data;return`<div class="card"><b>الصورة الشخصية</b><div class="ac"><div class="av" ${k?`data-k="1" style="background:url(${S.pe.data}) center/cover"`:`data-u="${m.id}"`}>${k?'':ini(m.name)}</div><button class="btn s" onclick="$('pf').click()">اختيار صورة</button></div><div class="ac">${[['public','عامة'],['private','أنا فقط'],['custom','مخصصة']].map(v=>`<button class="btn s ${p.vis==v[0]?'':'g'}" onclick="setVis('${v[0]}')">${v[1]}</button>`).join('')}</div>${p.vis=='custom'?(cs.map(u=>`<label class="sw"><span>${nm(u)}</span><input type="checkbox" ${(p.allow||[]).includes(u.id)?'checked':''} onchange="togAllow('${u.id}')"></label>`).join('')||'<small class="mu">أضف جهات اتصال أولاً</small>'):''}<small class="mu">عامة: يراها الجميع · أنا فقط: مخفية · مخصصة: أشخاص تختارهم</small><button class="btn" onclick="savePhoto()">حفظ الصورة والخصوصية</button></div>`}
+const setVis=v=>{S.pe={...PD(),vis:v};render()};
+function togAllow(id){const p=PD(),a=new Set(p.allow||[]);a.has(id)?a.delete(id):a.add(id);S.pe={...p,allow:[...a]}}
+function shrink(f,max,q){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const k=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',q))};i.onerror=no;i.src=r.result};r.onerror=no;r.readAsDataURL(f)})}
+async function pickPhoto(i){const f=i.files[0];i.value='';if(!f)return;try{const d=await shrink(f,256,.7);S.pe={...PD(),data:d};const e=document.querySelector('#app [data-u="'+D.me+'"]');if(e)setAv(e,d);if(S.v=='profile'||S.v=='settings'){await savePhoto();render()}}catch(e){toast('تعذر قراءة الصورة')}}
+async function savePhoto(){const p=PD();try{await fs.doc('photos/'+D.me).set({data:p.data||'',vis:p.vis||'public',allow:p.vis=='custom'?(p.allow||[]):[]});PM={data:p.data||'',vis:p.vis||'public',allow:p.allow||[]};S.pe=null;delete PH[D.me];toast('تم الحفظ')}catch(e){toast('تعذر الحفظ')}}
+async function putMedia(kind,data,x){const id=(await fs.collection('media').add({chat:S.chat,from:D.me,kind,data,t:Date.now(),...x})).id;MC[id]=data;if(D.auto!==false)lset('m:'+id,data);return id}
+async function sendMsg(m){const c=C(S.chat),u={msgs:FV.arrayUnion({id:uid(),from:D.me,t:Date.now(),...m})};Object.keys(c.gone||{}).forEach(k=>u['gone.'+k]=FV.delete());await fs.doc('chats/'+c.id).update(u)}
+async function sendImg(i){const f=i.files[0];i.value='';if(!f)return;try{toast('جارٍ الإرسال...');const mid=await putMedia('img',await shrink(f,900,.65));await sendMsg({kind:'img',mid})}catch(e){toast('تعذر إرسال الصورة')}}
+async function recVoice(){if(REC){REC.stop();return}
+try{const st=await navigator.mediaDevices.getUserMedia({audio:true}),ch=[],r=new MediaRecorder(st,{audioBitsPerSecond:24000});REC=r;RT=Date.now();let tt;
+r.ondataavailable=e=>ch.push(e.data);
+r.onstop=()=>{st.getTracks().forEach(t=>t.stop());clearTimeout(tt);REC=null;render();const dur=Math.round((Date.now()-RT)/1000);if(dur<1)return;const rd=new FileReader();
+rd.onload=async()=>{try{toast('جارٍ الإرسال...');const mid=await putMedia('aud',rd.result,{dur});await sendMsg({kind:'aud',mid,dur})}catch(e){toast('تعذر إرسال الصوت')}};rd.readAsDataURL(new Blob(ch,{type:r.mimeType}))};
+tt=setTimeout(()=>REC&&REC.stop(),90000);r.start();render()}catch(e){toast('تعذر الوصول إلى الميكروفون')}}
+const act=()=>(D.stories||[]).filter(x=>x.exp&&x.exp.toMillis()>Date.now()).sort((a,b)=>(a.id==D.me?-1:0)-(b.id==D.me?-1:0));
+function stBar(){return`<div style="display:flex;gap:12px;padding:10px 14px;overflow:auto;border-bottom:1px solid var(--bd)"><div class="c" onclick="S.sheet={t:'ns'};S.sImg=null;S.sVid=null;render()"><div class="av" style="border:2px dashed var(--pr);background:var(--bg2);color:var(--pr)">＋</div><small>حالتي</small></div>${act().map(x=>{const u=U(x.id)||{name:'؟'};return`<div class="c" onclick="S.sheet={t:'story',id:'${x.id}'};render()"><div class="av" data-u="${x.id}" style="border:3px solid var(--pr)">${ini(u.name)}</div><small>${esc(String(u.name).split(' ')[0])}</small></div>`}).join('')}</div>`}
+function storyHTML(id){const x=act().find(y=>y.id==id);if(!x)return'<b>انتهت هذه الحالة</b>';const mi=Math.max(1,Math.ceil((x.exp.toMillis()-Date.now())/60000)),l=mi>=1440?'نحو '+Math.round(mi/1440)+' يوم':mi>=60?'نحو '+Math.round(mi/60)+' ساعة':mi+' دقيقة';return`<b>${nm(U(id))}</b>${x.url?`<video src="${esc(x.url)}" controls playsinline style="width:100%;border-radius:10px;max-height:60vh;background:#000"></video>`:x.data?`<img src="${x.data}" style="width:100%;border-radius:10px">`:''}${x.text?`<p style="font-size:18px">${esc(x.text)}</p>`:''}<small class="mu">تنتهي بعد ${l}</small>${x.url||x.data?`<button class="btn s g" onclick="saveStory('${id}')">⬇ حفظ في ملفات الهاتف</button>`:''}${id==D.me?'<button class="btn r" onclick="delStory()">حذف حالتي</button>':''}`}
+const nsHTML=()=>`<b>حالة جديدة (تبقى أسبوعاً)</b><textarea id="st" rows="3" placeholder="اكتب حالتك"></textarea><div class="ac"><button class="btn s g" onclick="$('sf').click()">📷 صورة</button><button class="btn s g" onclick="$('sv').click()">🎞 فيديو (حتى 5 دقائق)</button></div><img id="sp" style="max-width:100%;display:none;border-radius:10px"><video id="svp" muted playsinline style="max-width:100%;display:none;border-radius:10px"></video><small id="pg" class="mu"></small><button id="pb" class="btn" onclick="publishStory()">نشر</button>`;
+async function pickStory(i){const f=i.files[0];i.value='';if(!f)return;try{S.sImg=await shrink(f,640,.6);S.sVid=null;const p=$('svp');if(p)p.style.display='none';const g=$('pg');if(g)g.textContent='';const e=$('sp');if(e){e.src=S.sImg;e.style.display='block'}}catch(e){toast('تعذر قراءة الصورة')}}
+async function publishStory(){const t=($('st').value||'').trim();if(!t&&!S.sImg&&!S.sVid)return toast('اكتب نصاً أو اختر صورة/فيديو');const b=$('pb');if(b)b.disabled=true;
+try{let url='',dur=0;const r=firebase.storage?firebase.storage().ref('stories/'+D.me+'/media'):null;
+if(S.sVid){if(!r)throw{code:'storage/غير-محمّل'};const f=S.sVid,task=r.put(f,{contentType:f.type||'video/mp4'});await new Promise((ok,no)=>task.on('state_changed',x=>{const e=$('pg');if(e)e.textContent='جارٍ الرفع '+Math.round(x.bytesTransferred/(x.totalBytes||1)*100)+'%'},no,ok));url=await r.getDownloadURL();dur=S.sVdur||0}else if(r)r.delete().catch(()=>{});
+await fs.doc('stories/'+D.me).set({text:t,data:S.sImg||'',url,dur,t:Date.now(),exp:firebase.firestore.Timestamp.fromMillis(Date.now()+7*864e5-10000)});S.sImg=null;S.sVid=null;nav('list');toast('تم نشر الحالة')}
+catch(e){const c=e.code||'';toast(c.startsWith('storage/')?'تعذر رفع الفيديو ('+c+') — تحقق من تفعيل Storage وقواعده':'تعذر النشر '+c);if(b)b.disabled=false}}
+async function delStory(){try{await fs.doc('stories/'+D.me).delete();if(firebase.storage)firebase.storage().ref('stories/'+D.me+'/media').delete().catch(()=>{})}catch(e){}nav('list')}
+function pickVid(i){const f=i.files[0];i.value='';if(!f)return;if(f.size>150*1048576)return toast('حجم الفيديو أكبر من 150MB — اختر جودة أقل');
+const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>{URL.revokeObjectURL(v.src);if(!(v.duration>0))return toast('تعذر قراءة مدة الفيديو');if(v.duration>300.5)return toast('الفيديو أطول من 5 دقائق');
+S.sVid=f;S.sVdur=Math.round(v.duration);S.sImg=null;const p=$('svp'),m=$('sp'),g=$('pg');if(p){p.src=URL.createObjectURL(f);p.style.display='block'}if(m)m.style.display='none';if(g)g.textContent='فيديو '+Math.floor(v.duration/60)+':'+String(Math.round(v.duration%60)).padStart(2,'0')+' · '+(f.size/1048576).toFixed(1)+'MB'};
+v.onerror=()=>toast('تعذر قراءة الفيديو');v.src=URL.createObjectURL(f)}
+let PC=null,LS=null,CID=null,CT=null,INC=null,cu=[];
+const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']}]};
+function callUI(on,name,v){$('callui').style.display=on?'flex':'none';$('cn').textContent=name||'';$('lv').style.display=v?'block':'none'}
+const media=t=>navigator.mediaDevices.getUserMedia({audio:true,video:t=='video'?{facingMode:'user'}:false});
+function mkPC(ref,mine){PC=new RTCPeerConnection(ICE);LS.getTracks().forEach(t=>PC.addTrack(t,LS));$('lv').srcObject=LS;PC.onicecandidate=e=>{if(e.candidate)ref.collection(mine).add(e.candidate.toJSON())};PC.ontrack=e=>{$('rv').srcObject=e.streams[0];$('cn').textContent=$('cn').textContent.replace(' — جارٍ الاتصال...','')};PC.onconnectionstatechange=()=>{if(PC&&['failed','closed'].includes(PC.connectionState))endCall()}}
+function watchCand(ref,coll){cu.push(ref.collection(coll).onSnapshot(x=>x.docChanges().forEach(ch=>{if(ch.type=='added'&&PC)PC.addIceCandidate(ch.doc.data()).catch(()=>{})})))}
+async function startCall(type){const c=C(S.chat),o=other(c);if(PC||!o)return;
+try{LS=await media(type)}catch(e){return toast('تعذر الوصول للكاميرا/الميكروفون')}
+const ref=fs.collection('calls').doc();CID=ref.id;mkPC(ref,'callerCandidates');callUI(true,plain(c)+' — جارٍ الاتصال...',type=='video');
+const off=await PC.createOffer();await PC.setLocalDescription(off);
+try{await ref.set({from:D.me,to:o.id,type,offer:{type:off.type,sdp:off.sdp},status:'ringing',t:Date.now()})}catch(e){endCall(1);return toast('تعذر بدء المكالمة')}
+let got=0;cu.push(ref.onSnapshot(async x=>{const d=x.data();if(!d||!PC)return;if(d.answer&&!got){got=1;await PC.setRemoteDescription(d.answer);watchCand(ref,'calleeCandidates')}if(d.status=='ended'||d.status=='rejected')endCall(1)}));
+CT=setTimeout(()=>{if(PC&&!PC.remoteDescription){toast('لم يتم الرد');endCall()}},45000)}
+async function answerCall(){const d=INC;INC=null;$('inc').style.display='none';if(!d||PC)return;const ref=fs.doc('calls/'+d.id);CID=d.id;
+try{LS=await media(d.type)}catch(e){ref.update({status:'ended'}).catch(()=>{});return toast('تعذر الوصول للكاميرا/الميكروفون')}
+mkPC(ref,'calleeCandidates');callUI(true,(U(d.from)||{}).name||'',d.type=='video');
+await PC.setRemoteDescription(d.offer);const an=await PC.createAnswer();await PC.setLocalDescription(an);
+await ref.update({answer:{type:an.type,sdp:an.sdp},status:'active'});watchCand(ref,'callerCandidates');
+cu.push(ref.onSnapshot(x=>{const y=x.data();if(y&&y.status=='ended')endCall(1)}))}
+function rejectCall(){if(INC)fs.doc('calls/'+INC.id).update({status:'rejected'}).catch(()=>{});INC=null;$('inc').style.display='none'}
+function endCall(remote){clearTimeout(CT);cu.forEach(f=>f());cu=[];if(PC){const p=PC;PC=null;p.close()}if(LS){LS.getTracks().forEach(t=>t.stop());LS=null}$('rv').srcObject=null;callUI(false);if(CID&&!remote)fs.doc('calls/'+CID).update({status:'ended'}).catch(()=>{});CID=null}
+function togMic(){if(LS)LS.getAudioTracks().forEach(t=>t.enabled=!t.enabled)}
+const IC={search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',dots:'<circle cx="12" cy="5" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="19" r="1.4" fill="currentColor"/>',
+chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',user:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.5 18.2c1-2 3-3 5.5-3s4.5 1 5.5 3"/>',
+gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+camera:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',pencil:'<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+qr:'<path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM20 14v3M14 20h3M20 20h1"/>',newmsg:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M12 8.5v6M9 11.5h6"/>',
+key:'<path d="M21 2l-2 2m-7.6 7.6a5.5 5.5 0 1 1-7.8 7.8 5.5 5.5 0 0 1 7.8-7.8zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>',bell:'<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/>',
+data:'<path d="M21.2 15.9A10 10 0 1 1 8 2.8M22 12A10 10 0 0 0 12 2v10z"/>',out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>'};
+const ic=n=>`<svg viewBox="0 0 24 24">${IC[n]||''}</svg>`;
+const hd2=(t,b)=>`<div class="hd"><button onclick="nav('${b||'settings'}')">→</button><b class="gr">${t}</b></div>`;
+const wpc=()=>D.dark?'#0e1621':['#e6ebee','#dcebdc','#e6e0f0','#f1e9dc'][D.wp||0];
+let SEEN={};try{SEEN=JSON.parse(localStorage.getItem('tgseen')||'{}')}catch(e){}
+const unread=c=>vis(c).filter(m=>m.from!=D.me&&m.t>(SEEN[c.id]||0)).length;
+function markSeen(){const c=C(S.chat);if(!c)return;const l=vis(c).slice(-1)[0];if(l&&(SEEN[c.id]||0)<l.t){SEEN[c.id]=l.t;try{localStorage.setItem('tgseen',JSON.stringify(SEEN))}catch(e){}}}
+function rowsHTML(){const q=(S.q||'').toLowerCase();return mine().filter(c=>(S.tab=='all'||(S.tab=='priv')==(c.type=='private'))&&(!q||plain(c).toLowerCase().includes(q))).sort((a,b)=>((vis(b).slice(-1)[0]||{}).t||0)-((vis(a).slice(-1)[0]||{}).t||0)).map(c=>{const lm=vis(c).slice(-1)[0],n=unread(c);return`<div class="row" onclick="nav('chat',{chat:'${c.id}'})">${avc(c)}<div class="t"><b>${title(c)}</b>${c.type=='group'?' <small>👥</small>':''}<p>${prev(c)}</p></div><div class="rt"><small>${lm?tm(lm.t):''}</small>${n?`<span class="bd">${n}</span>`:''}</div></div>`}).join('')||'<p class="c mu" style="margin-top:40px">لا توجد محادثات</p>'}
+function togSq(){S.sq=!S.sq;if(!S.sq)S.q='';render();setTimeout(()=>{const e=$('sq');if(e)e.focus()},0)}
+function navBar(){const m=me(),T=[['list','chat','المحادثات'],['contacts','user','جهات الاتصال'],['settings','gear','الإعدادات'],['profile','','الملف الشخصي']];
+return`<div class="nb">${T.map(t=>`<div class="${S.v==t[0]?'on':''}" onclick="nav('${t[0]}')">${t[1]?ic(t[1]):`<div class="av xs" data-u="${D.me}">${ini(m?m.name:'؟')}</div>`}<span>${t[2]}</span></div>`).join('')}</div>`}
+async function saveFile(src,name){try{let u=src;if(!src.startsWith('data:')){const r=await fetch(src);u=URL.createObjectURL(await r.blob())}const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();toast('تم الحفظ في ملفات الهاتف')}catch(e){window.open(src,'_blank');toast('افتح الملف واحفظه يدوياً')}}
+function saveMsg(mid,k){const d=MC[mid];if(!d)return;const ext=k=='img'?'jpg':(d.match(/^data:audio\/(\w+)/)||[0,'webm'])[1];saveFile(d,'chat-'+mid+'.'+ext);S.sheet=null;render()}
+function saveStory(id){const x=act().find(y=>y.id==id);if(x)saveFile(x.url||x.data,'story-'+id+(x.url?'.mp4':'.jpg'))}
+const IDB=new Promise(ok=>{try{const r=indexedDB.open('tgmedia',1);r.onupgradeneeded=()=>r.result.createObjectStore('m');r.onsuccess=()=>ok(r.result);r.onerror=()=>ok(null)}catch(e){ok(null)}});
+const idb=async(mode,f)=>{const db=await IDB;if(!db)return;return new Promise(ok=>{try{const t=db.transaction('m',mode),r=f(t.objectStore('m'));t.oncomplete=()=>ok(r&&r.result);t.onerror=()=>ok()}catch(e){ok()}})};
+const lget=k=>idb('readonly',s=>s.get(k)),lset=(k,v)=>idb('readwrite',s=>s.put(v,k)),lclr=()=>idb('readwrite',s=>s.clear());
+async function lsize(){const db=await IDB;if(!db)return{n:0,b:0};return new Promise(ok=>{let n=0,b=0;try{const r=db.transaction('m').objectStore('m').openCursor();r.onsuccess=()=>{const c=r.result;if(c){n++;b+=String(c.value).length;c.continue()}else ok({n,b})};r.onerror=()=>ok({n:0,b:0})}catch(e){ok({n:0,b:0})}})}
+async function clrLocal(){await lclr();for(const k in MC)delete MC[k];toast('تم المسح');render()}
+const sw=(k,l)=>`<div class="sw"><span>${l}</span><input type="checkbox" ${D.cfg[k]?'checked':''} onchange="cfgT('${k}')"></div>`;
+const V={
+auth(){const r=S.mode=='reg';return`<div class="pad" style="margin-top:8vh"><h2 class="c" style="color:var(--pr)">${esc(D.cfg.appName)}</h2>
+${r?'<input id="rn" placeholder="الاسم"><input id="ru" placeholder="اسم المستخدم (إنجليزي)" dir="ltr"><input id="rp" type="password" placeholder="كلمة السر (6 أحرف فأكثر)" dir="ltr"><button class="btn" onclick="doReg()">إنشاء حساب</button><a class="c mu" onclick="S.mode=\'login\';render()">لدي حساب</a>'
+:'<input id="lu" placeholder="اسم المستخدم" dir="ltr"><input id="lp" type="password" placeholder="كلمة السر" dir="ltr"><button class="btn" onclick="doLogin()">دخول</button><a class="c mu" onclick="S.mode=\'reg\';render()">إنشاء حساب جديد</a>'}
+${D.me?'<button class="btn g" onclick="nav(\'settings\')">رجوع</button>':''}<a class="c mu" href="admin.html" style="margin-top:20px">لوحة الإدارة</a></div>`},
+list(){const m=me()||{name:'؟'},mc=mine(),np=mc.filter(c=>c.type=='private').length,ng=mc.length-np;
+return`<div class="top" dir="ltr"><div class="av sm" data-u="${D.me}" onclick="nav('profile')">${ini(m.name)}</div><b class="ttl">${esc(D.cfg.appName)}</b><span class="sp"></span><button onclick="togSq()">${ic('search')}</button><button onclick="S.sheet={t:'menu'};render()">${ic('dots')}</button></div>
+${S.sq?`<div class="pd"><input id="sq" placeholder="بحث" value="${esc(S.q||'')}" oninput="S.q=this.value;$('lst').innerHTML=rowsHTML();hydrate()"></div>`:''}
+<div class="chips">${[['all','الكل',0],['priv','خاص',np],['grp','المجموعات',ng]].map(t=>`<button class="${S.tab==t[0]?'on':''}" onclick="S.tab='${t[0]}';render()">${t[1]}${t[2]?` <span class="cn">${t[2]}</span>`:''}</button>`).join('')}</div>
+${stBar()}<div class="list" id="lst">${rowsHTML()}</div>
+<button class="fab2" onclick="S.sheet={t:'ns'};S.sImg=null;S.sVid=null;render()">${ic('camera')}</button><button class="fab" onclick="nav('new')">${ic('newmsg')}</button>`},
+chat(){const c=C(S.chat);if(!c)return V.list();const pr=c.type=='private';
+return`<div class="hd"><button onclick="nav('list')">→</button>${avc(c)}<b class="gr">${title(c)}</b>${pr?`<button onclick="startCall('audio')">📞</button><button onclick="startCall('video')">🎥</button>`:''}<button onclick="S.sheet={t:'dc'};render()">🗑</button></div>
+<div id="msgs" class="msgs" style="background:${wpc()}">${vis(c).map(x=>{const mi=x.from==D.me;return`<div class="b ${mi?'me':''}" onclick="S.sheet={t:'msg',id:'${x.id}'};render()">${!pr&&!mi?`<small>${nm(U(x.from))}</small>`:''}${mb(x)}<em>${tm(x.t)}</em></div>`}).join('')}</div>
+<div class="cp">${pr&&D.cfg.pay?'<button onclick="S.sheet={t:\'pay\'};render()">💸</button>':''}<button onclick="$('fi').click()">📷</button><button onclick="recVoice()">${REC?'⏹':'🎤'}</button><input id="ti" placeholder="اكتب رسالة" onkeydown="if(event.key==\'Enter\')send()"><button onclick="send()">➤</button></div>`},
+new(){const m=me(),cs=(m.contacts||[]).map(U).filter(u=>u&&!u.banned);
+return`<div class="hd"><button onclick="nav('list')">→</button><b class="gr">محادثة جديدة</b></div><div class="list">
+${D.cfg.groups?'<div class="row" onclick="nav(\'group\')"><div class="av">👥</div><b>مجموعة جديدة</b></div>':''}
+<div class="pad"><b>إضافة جهة اتصال</b><input id="cu" placeholder="اسم المستخدم أو الرمز الرقمي" dir="ltr"><button class="btn" onclick="addContact()">إضافة وبدء محادثة</button></div>
+${cs.map(u=>`<div class="row" onclick="openPriv('${u.id}')"><div class="av" data-u="${u.id}">${ini(u.name)}</div><b>${nm(u)}</b></div>`).join('')}</div>`},
+group(){const cs=(me().contacts||[]).map(U).filter(Boolean);
+return`<div class="hd"><button onclick="nav('new')">→</button><b class="gr">مجموعة جديدة</b></div><div class="pad"><input id="gn" placeholder="اسم المجموعة">
+${cs.map(u=>`<label class="sw"><span>${nm(u)}</span><input type="checkbox" class="gc" value="${u.id}"></label>`).join('')}<button class="btn" onclick="mkGroup()">إنشاء</button></div>`},
+settings(){const m=me();if(!m)return V.auth();
+const R=(v,c,i,t,sb)=>`<div class="srow" onclick="nav('${v}')"><div class="si" style="background:${c}">${ic(i)}</div><div class="t"><b>${t}</b><small>${sb}</small></div></div>`;
+return`<div class="top" dir="ltr"><span class="sp"></span><button onclick="S.sheet={t:'menu'};render()">${ic('dots')}</button></div><div class="scr"><div class="c"><div class="av lg" data-u="${m.id}" style="position:relative">${ini(m.name)}<span class="cam" onclick="$('pf').click()">${ic('camera')}</span></div><h2 class="nm">${nm(m)}</h2><div class="mu" dir="ltr">${m.code||''} · @${esc(m.user)}</div></div>
+<div class="card2" style="margin-top:14px"><div class="sec">الحسابات</div><div class="arow"><div class="av sm" data-u="${m.id}">${ini(m.name)}</div><b>${nm(m)}</b><span class="mu">✔</span></div><div class="arow" onclick="nav('auth',{mode:'login'})"><div class="av sm" style="background:var(--chip);color:var(--pr)">＋</div><b>إضافة حساب</b></div></div>
+<div class="card2">${R('acct','#3d8bf2','user','الحساب','الاسم، النبذة، الرمز الرقمي، التوثيق')}${R('chatset','#e8962e','chat','إعدادات المحادثات','خلفية الشاشة، الوضع الليلي، حجم الخط')}${R('privacy','#43b05c','key','الخصوصية والأمان','خصوصية صورة الملف الشخصي')}${R('notif','#e5484d','bell','الإشعارات','تفعيل الإشعارات')}${R('storage','#4f6fe8','data','البيانات والتخزين','الحفظ في ذاكرة الهاتف وملفاته')}</div>
+<div class="card2"><div class="srow" onclick="logout()"><div class="si" style="background:#e5484d">${ic('out')}</div><div class="t"><b>تسجيل الخروج</b></div></div></div></div>`},
+acct(){const m=me();if(!m)return V.auth();return hd2('الحساب')+`<div class="pad"><div class="card"><input id="sn" value="${esc(m.name)}" placeholder="الاسم"><input id="sb" value="${esc(m.bio)}" placeholder="نبذة"><small class="mu">اسم المستخدم: @${esc(m.user)} (لا يمكن تغييره)</small><button class="btn" onclick="saveProf()">حفظ</button></div>${codeCard(m)}<div class="card"><b>توثيق الحساب</b>${m.verified?'<span>حسابك موثّق '+tick+'</span>':m.vreq?'<span class="mu">طلب التوثيق قيد المراجعة</span>':'<button class="btn" onclick="reqV()">طلب العلامة الزرقاء</button>'}</div></div>`},
+chatset(){const wps=['#e6ebee','#dcebdc','#e6e0f0','#f1e9dc'];return hd2('إعدادات المحادثات')+`<div class="pad"><div class="card"><label class="sw"><span>الوضع الليلي</span><input type="checkbox" ${D.dark?'checked':''} onchange="D.dark=!D.dark;save();render()"></label></div><div class="card"><b>خلفية المحادثة</b><div class="ac">${wps.map((w,i)=>`<div onclick="D.wp=${i};save();render()" style="width:54px;height:54px;border-radius:12px;background:${w};border:3px solid ${(D.wp||0)==i?'var(--pr)':'transparent'}"></div>`).join('')}</div></div><div class="card"><b>حجم الخط</b><div class="ac">${[[14,'صغير'],[16,'عادي'],[18,'كبير']].map(f=>`<button class="btn s ${D.fs==f[0]?'':'g'}" onclick="D.fs=${f[0]};save();render()">${f[1]}</button>`).join('')}</div></div></div>`},
+privacy(){return hd2('الخصوصية والأمان')+`<div class="pad">${phCard(me())}</div>`},
+notif(){return hd2('الإشعارات')+`<div class="pad"><div class="card"><label class="sw"><span>تفعيل الإشعارات</span><input type="checkbox" ${D.notif?'checked':''} onchange="D.notif=this.checked;save()"></label><small class="mu">الإشعارات الفورية خارج التطبيق غير متاحة بعد؛ الخيار محفوظ للمستقبل.</small></div></div>`},
+storage(){return hd2('البيانات والتخزين')+`<div class="pad"><div class="card"><b>ذاكرة الهاتف</b><small class="mu">الصور والتسجيلات الصوتية تُحفظ في ذاكرة هذا الجهاز (منفصلة عن Firebase) لتُفتح بسرعة دون إعادة تنزيل.</small><div id="lz" class="mu">جارٍ الحساب...</div><label class="sw"><span>حفظ الوسائط تلقائياً في ذاكرة الهاتف</span><input type="checkbox" ${D.auto!==false?'checked':''} onchange="D.auto=this.checked;save()"></label><button class="btn r" onclick="clrLocal()">مسح ذاكرة الهاتف المؤقتة</button></div><div class="card"><b>حفظ في ملفات الهاتف</b><small class="mu">اضغط على أي صورة أو تسجيل صوتي داخل المحادثة ثم «حفظ في ملفات الهاتف» لتنزيله إلى مجلد التنزيلات. كذلك في عرض الحالة.</small></div></div>`},
+contacts(){const m=me();if(!m)return V.auth();const cs=(m.contacts||[]).map(U).filter(u=>u&&!u.banned);return`<div class="top"><b class="ttl" style="margin:0">جهات الاتصال</b></div><div class="scr"><div class="card2"><input id="cu" placeholder="اسم المستخدم أو الرمز الرقمي" dir="ltr"><button class="btn" style="width:100%;margin-top:8px" onclick="addContact()">إضافة وبدء محادثة</button></div>${D.cfg.groups?`<div class="card2"><div class="arow" onclick="nav('group')"><div class="av sm" style="background:var(--chip);color:var(--pr)">👥</div><b>مجموعة جديدة</b></div></div>`:''}<div class="card2">${cs.map(u=>`<div class="arow" onclick="openPriv('${u.id}')"><div class="av sm" data-u="${u.id}">${ini(u.name)}</div><b>${nm(u)}</b></div>`).join('')||'<p class="c mu">لا توجد جهات اتصال بعد</p>'}</div></div>`},
+profile(){const m=me();if(!m)return V.auth();const a=act().find(x=>x.id==m.id);
+return`<div class="top" dir="ltr"><button onclick="S.sheet={t:'code'};render()">${ic('qr')}</button><span class="sp"></span><button onclick="S.sheet={t:'menu'};render()">${ic('dots')}</button></div>
+<div class="scr"><div class="c"><div class="av xl" data-u="${m.id}">${ini(m.name)}</div><h2 class="nm">${nm(m)}</h2><div class="mu">متصل</div></div>
+<div class="acts"><div onclick="$('pf').click()">${ic('camera')}<span>تعيين صورة</span></div><div onclick="nav('acct')">${ic('pencil')}<span>تعديل البيانات</span></div><div onclick="nav('settings')">${ic('gear')}<span>الإعدادات</span></div></div>
+<div class="card2">${m.code?`<div onclick="cp('${m.code}')"><b dir="ltr">${m.code}</b><small>الرمز الرقمي (اضغط للنسخ)</small></div>`:''}<div><b dir="ltr">@${esc(m.user)}</b><small>اسم المستخدم</small></div>${m.bio?`<div><b>${esc(m.bio)}</b><small>النبذة</small></div>`:''}<div><b>${m.bal}</b><small>الرصيد</small></div></div>
+<div class="chips" style="margin:16px 0 10px"><button class="on">المنشورات</button></div>
+<button class="btn" style="width:100%" onclick="S.sheet={t:'ns'};S.sImg=null;S.sVid=null;render()">إضافة منشور 📷</button>
+${a?`<div class="card2" onclick="S.sheet={t:'story',id:'${m.id}'};render()" style="margin-top:10px"><div>${a.url?'🎞 فيديو ':a.data?'🖼 صورة ':''}${esc(a.text||'')}</div></div>`:'<p class="c mu">لا توجد منشورات</p>'}</div>`}
+};
+function sheet(){const h=S.sheet,x=(h.t=='msg'?C(S.chat).msgs.find(m=>m.id==h.id):0);let b='';
+if(h.t=='msg'){b=`<button class="btn g" onclick="msgDel('${h.id}',0)">حذف عندي</button>`+(x&&x.from==D.me&&!x.del?`<button class="btn r" onclick="msgDel('${h.id}',1)">حذف للجميع</button>`:'')}
+if(h.t=='msg'&&x&&!x.del&&x.mid&&MC[x.mid])b=`<button class="btn" onclick="saveMsg('${x.mid}','${x.kind}')">⬇ حفظ في ملفات الهاتف</button>`+b;
+if(h.t=='dc')b='<b>حذف هذه المحادثة من حسابك؟</b><button class="btn r" onclick="chatDel()">حذف المحادثة</button>';
+if(h.t=='pay')b=`<b>تحويل رصيد (رصيدك ${me().bal})</b><input id="pa" type="number" inputmode="numeric" placeholder="المبلغ"><button class="btn" onclick="pay()">إرسال</button>`;
+if(h.t=='bal')b=`<b>تعديل رصيد ${esc(U(h.id).name)}</b><input id="ba" type="number" inputmode="numeric" placeholder="المبلغ"><div class="ac"><button class="btn" onclick="bal('${h.id}',1)">إضافة</button><button class="btn r" onclick="bal('${h.id}',-1)">سحب</button></div>`;
+if(h.t=='story')b=storyHTML(h.id);if(h.t=='ns')b=nsHTML();
+if(h.t=='menu')b=`<button class="btn g" onclick="nav('settings')">الإعدادات</button>${D.cfg.groups?`<button class="btn g" onclick="nav('group')">مجموعة جديدة</button>`:''}<button class="btn r" onclick="logout()">تسجيل الخروج</button>`;
+if(h.t=='code'){const m=me();b=`<b>رمزي الرقمي</b><b style="font-size:34px;letter-spacing:4px;text-align:center" dir="ltr">${m.code||''}</b><div class="ac"><button class="btn" onclick="cp('${m.code}')">نسخ</button><button class="btn g" onclick="shareCode('${m.code}')">مشاركة</button></div>`}
+return`<div class="sh" onclick="if(event.target==this){S.sheet=null;render()}"><div>${b}<button class="btn g" onclick="S.sheet=null;render()">إلغاء</button></div></div>`}
+function render(){document.documentElement.dataset.theme=D.dark?'dark':'light';const t=$('ti'),tv=t?t.value:'',f=t&&document.activeElement==t;const a=$('app');a.style.fontSize=(D.fs||16)+'px';
+a.innerHTML=(V[S.v]||V.auth)()+(['list','contacts','settings','profile'].includes(S.v)?navBar():'')+(S.sheet?sheet():'');if(S.v=='chat')markSeen();const m=$('msgs');if(m)m.scrollTop=m.scrollHeight;const n=$('ti');if(n){n.value=tv;if(f)n.focus()}
+if(S.v=='storage')lsize().then(r=>{const e=$('lz');if(e)e.textContent=r.n+' ملف · '+(r.b*.75/1048576).toFixed(1)+' MB'});hydrate()}
+function listen(id){fs.doc('photos/'+id).get().then(x=>{PM=x.exists?x.data():null}).catch(()=>{});un.push(
+fs.collection('users').onSnapshot(s=>{D.users=s.docs.map(d=>({id:d.id,...d.data()}));ui()},e=>toast('خطأ اتصال: '+e.code)),
+fs.collection('chats').where('members','array-contains',id).onSnapshot(s=>{D.chats=s.docs.map(d=>({id:d.id,...d.data()}));ui()},e=>toast('خطأ اتصال: '+e.code)),
+fs.doc('cfg/app').onSnapshot(s=>{if(s.exists)D.cfg={...D.cfg,...s.data()};ui()},()=>{}),
+fs.collection('stories').onSnapshot(s=>{D.stories=s.docs.map(d=>({id:d.id,...d.data()}));ui()},()=>{}),
+fs.collection('calls').where('to','==',id).where('status','==','ringing').onSnapshot(s=>s.docChanges().forEach(ch=>{const d={id:ch.doc.id,...ch.doc.data()};if(ch.type=='added'){if(Date.now()-d.t<60000&&!PC&&!INC){INC=d;$('incn').textContent=((U(d.from)||{}).name||'')+(d.type=='video'?' — مكالمة فيديو':' — مكالمة صوتية');$('inc').style.display='flex'}}else if(ch.type=='removed'&&INC&&INC.id==d.id){INC=null;$('inc').style.display='none'}}),()=>{}))}
+function ui(){const m=me();if(m&&m.banned){auth.signOut();return toast('هذا الحساب محظور')}ensureCode();const a=document.activeElement;if(a&&/INPUT|TEXTAREA/.test(a.tagName)&&a.id!='ti')return;if(S.sheet&&(S.sheet.t=='story'||S.sheet.t=='ns'))return;if([...document.querySelectorAll('audio,video')].some(x=>!x.paused))return;render()}
+auth.onAuthStateChanged(u=>{un.forEach(f=>f());un=[];D.users=[];D.chats=[];if(u){D.me=u.uid;PM=null;S.pe=null;S.gc=0;if(S.v=='auth')S.v='list';listen(u.uid)}else{D.me=null;S.v='auth';S.mode='login';for(const k in PH)delete PH[k]}render()});
+fs.doc('cfg/app').get().then(s=>{if(s.exists){D.cfg={...D.cfg,...s.data()};if(S.v=='auth')render()}}).catch(()=>{});render();setInterval(()=>{if(D.me)ui()},30000);
+</script></body></html>
+
+~~~~~
+
+### admin.html
+~~~~~
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>لوحة الإدارة</title><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script><script src="firebase-config.js"></script><style>
+:root{--bg:#fff;--bg2:#eef1f4;--tx:#111;--mu:#6b7280;--pr:#2aabee;--me:#d7f0ff;--bd:#e5e7eb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17212b;--bg2:#0e1621;--tx:#f1f5f9;--mu:#8b9bab;--me:#2b5278;--bd:#243447}}
+:root[data-theme="dark"]{--bg:#17212b;--bg2:#0e1621;--tx:#f1f5f9;--mu:#8b9bab;--me:#2b5278;--bd:#243447}
+*{box-sizing:border-box;margin:0;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif}
+html,body{height:100%;background:var(--bg);color:var(--tx)}
+#app{height:100%;display:flex;flex-direction:column;max-width:560px;margin:auto;position:relative;overflow:hidden}
+.hd{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--pr);color:#fff}
+.hd button{background:none;border:0;color:#fff;font-size:20px;padding:4px 8px}
+.gr{flex:1;font-size:17px}
+.av{width:42px;height:42px;border-radius:50%;background:var(--pr);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.hd .av{background:#ffffff40}
+.tabs{display:flex;background:var(--pr)}
+.tabs button{flex:1;padding:10px;background:none;border:0;color:#ffffffb0;border-bottom:3px solid transparent;font-size:15px}
+.tabs .on{color:#fff;border-color:#fff}
+.list{flex:1;overflow:auto}
+.row{display:flex;gap:12px;padding:10px 14px;align-items:center;border-bottom:1px solid var(--bd)}
+.row .t{flex:1;min-width:0}
+.row p{color:var(--mu);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row small,.mu{color:var(--mu)}
+.fab{position:absolute;left:16px;bottom:16px;width:54px;height:54px;border-radius:50%;border:0;background:var(--pr);color:#fff;font-size:24px;box-shadow:0 3px 10px #0004}
+.msgs{flex:1;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:6px;background:var(--bg2)}
+.b{max-width:80%;padding:7px 10px;border-radius:12px;background:var(--bg);align-self:flex-end;word-break:break-word}
+.b.me{background:var(--me);align-self:flex-start}
+.b small{display:block;color:var(--pr);font-weight:700}
+.b em{display:block;font-size:11px;color:var(--mu);font-style:normal;text-align:end}
+.cp{display:flex;gap:6px;padding:8px;border-top:1px solid var(--bd);background:var(--bg)}
+input,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx);font-size:16px}
+.cp input{flex:1}.cp button{background:none;border:0;font-size:22px;color:var(--pr)}
+.pad{padding:14px;overflow:auto;flex:1;display:grid;gap:10px;align-content:start}
+.card{background:var(--bg2);border-radius:12px;padding:12px;display:grid;gap:8px}
+.ac{display:flex;gap:6px;flex-wrap:wrap}
+.btn{background:var(--pr);color:#fff;border:0;border-radius:10px;padding:11px 14px;font-size:15px}
+.btn.s{padding:6px 10px;font-size:13px}.btn.r{background:#e5484d}.btn.g{background:var(--mu)}
+.sh{position:absolute;inset:0;background:#0007;display:flex;align-items:flex-end;z-index:9}
+.sh>div{background:var(--bg);width:100%;padding:14px;border-radius:16px 16px 0 0;display:grid;gap:8px}
+.vb{width:16px;height:16px;vertical-align:-3px;margin-inline-start:3px}
+.sw{display:flex;justify-content:space-between;align-items:center}
+.sw input{width:22px;height:22px}
+.err{color:#e5484d}.c{text-align:center}
+.tg{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);background:#000c;color:#fff;padding:8px 14px;border-radius:20px;z-index:20;font-size:14px}
+a.btn{text-decoration:none;display:block}</style></head><body><div id="app"></div><script>firebase.initializeApp(window.FB_CONFIG);
+const auth=firebase.auth(),fs=firebase.firestore(),FV=firebase.firestore.FieldValue;
+const $=id=>document.getElementById(id),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const tick='<svg class="vb" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#2aabee"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+let D={users:[],chats:[],cfg:{appName:'محادثاتي',reg:true,groups:true,pay:true}},S={adm:0,at:'stats'},un=[];
+const U=id=>D.users.find(u=>u.id==id),nm=u=>u?esc(u.name)+(u.verified?tick:''):'محذوف';
+function toast(t){const e=document.createElement('div');e.className='tg';e.textContent=t;$('app').appendChild(e);setTimeout(()=>e.remove(),2200)}
+const sw=(k,l)=>`<div class="sw"><span>${l}</span><input type="checkbox" ${D.cfg[k]?'checked':''} onchange="cfgT('${k}')"></div>`;
+async function admIn(){try{await auth.signInWithEmailAndPassword($('au').value.trim().toLowerCase()+'@chat.local',$('ap').value);S.err=''}catch(e){toast('بيانات غير صحيحة')}}
+auth.onAuthStateChanged(async u=>{un.forEach(f=>f());un=[];S.adm=0;if(u){try{const d=await fs.doc('users/'+u.uid).get();if(d.exists&&d.data().admin===true){S.adm=1;S.uid=u.uid;S.err='';const er=e=>toast('خطأ اتصال: '+e.code);
+un.push(fs.collection('users').onSnapshot(s=>{D.users=s.docs.map(x=>({id:x.id,...x.data()}));ui()},er),fs.collection('chats').onSnapshot(s=>{D.chats=s.docs.map(x=>({id:x.id,...x.data()}));ui()},er),fs.doc('cfg/app').onSnapshot(s=>{if(s.exists)D.cfg={...D.cfg,...s.data()};ui()},()=>{}))}else{S.err='هذا الحساب ليس أدمن';auth.signOut()}}catch(e){S.err='تعذر التحقق: '+e.code;auth.signOut()}}render()});
+function ui(){const a=document.activeElement;if(a&&/INPUT|TEXTAREA/.test(a.tagName))return;render()}
+const upd=(id,o)=>fs.doc('users/'+id).update(o).catch(()=>toast('تعذر التنفيذ'));
+const tv=id=>upd(id,{verified:!U(id).verified,vreq:false}),tb=id=>upd(id,{banned:!U(id).banned}),rej=id=>upd(id,{vreq:false});
+const cfgT=k=>fs.doc('cfg/app').set({[k]:!D.cfg[k]},{merge:true}).catch(()=>toast('تعذر الحفظ'));
+async function du(id){const b=fs.batch();D.chats.filter(c=>c.type=='private'&&c.members.includes(id)).forEach(c=>b.delete(fs.doc('chats/'+c.id)));b.delete(fs.doc('users/'+id));try{await b.commit()}catch(e){toast('تعذر الحذف')}}
+const dc=id=>fs.doc('chats/'+id).delete().catch(()=>toast('تعذر الحذف'));
+function bal(id,sg){const a=Math.floor(+$('ba').value);if(!(a>0))return toast('مبلغ غير صحيح');S.sheet=null;upd(id,{bal:Math.max(0,U(id).bal+sg*a)});render()}
+async function bcast(){const t=$('bc').value.trim();if(!t)return;const me=S.uid;try{for(const u of D.users.filter(u=>u.id!=me&&!u.admin)){const c=D.chats.find(c=>c.type=='private'&&c.members.includes(me)&&c.members.includes(u.id)),m={id:uid(),from:me,text:t,t:Date.now()};
+if(c)await fs.doc('chats/'+c.id).update({msgs:FV.arrayUnion(m),['gone.'+u.id]:FV.delete()});else await fs.collection('chats').add({type:'private',members:[me,u.id],msgs:[m],gone:{}})}$('bc').value='';toast('تم الإرسال للجميع')}catch(e){toast('تعذر الإرسال')}}
+function cfgS(){const a=$('an').value.trim();if(a)fs.doc('cfg/app').set({appName:a},{merge:true}).then(()=>toast('تم الحفظ')).catch(()=>toast('تعذر الحفظ'))}
+function view(){
+if(!S.adm)return`<div class="hd"><a class="btn s" href="index.html" style="background:#ffffff40">→</a><b class="gr">لوحة الإدارة</b></div><div class="pad"><input id="au" placeholder="اسم مستخدم الأدمن" dir="ltr"><input id="ap" type="password" placeholder="كلمة السر" dir="ltr"><button class="btn" onclick="admIn()">دخول</button>${S.err?`<p class="err">${esc(S.err)}</p>`:''}</div>`;
+const tabs=[['stats','إحصاءات'],['users','المستخدمون'],['chats','المحادثات'],['ver','التوثيق'],['cfg','الإعدادات']];let b='';
+if(S.at=='stats'){const ms=D.chats.reduce((a,c)=>a+c.msgs.length,0);b=`<div class="card">المستخدمون: ${D.users.length}<br>الموثّقون: ${D.users.filter(u=>u.verified).length}<br>محادثات خاصة: ${D.chats.filter(c=>c.type=='private').length}<br>مجموعات: ${D.chats.filter(c=>c.type=='group').length}<br>الرسائل: ${ms}<br>طلبات توثيق: ${D.users.filter(u=>u.vreq).length}</div>`}
+if(S.at=='users')b=D.users.map(u=>`<div class="card"><div><b>${nm(u)}</b> <small class="mu">@${esc(u.user)} · رمز ${u.code||'-'} · رصيد ${u.bal}${u.banned?' · محظور':''}</small></div><div class="ac"><button class="btn s" onclick="tv('${u.id}')">${u.verified?'إلغاء التوثيق':'توثيق'}</button><button class="btn s g" onclick="S.sheet='${u.id}';render()">رصيد</button><button class="btn s g" onclick="tb('${u.id}')">${u.banned?'فك الحظر':'حظر'}</button><button class="btn s r" onclick="du('${u.id}')">حذف</button></div></div>`).join('');
+if(S.at=='chats')b=D.chats.map(c=>`<div class="card"><div>${c.type=='group'?'👥 '+esc(c.name):'💬 '+c.members.map(i=>esc((U(i)||{name:'؟'}).name)).join(' ⇄ ')} <small class="mu">${c.msgs.length} رسالة</small></div><button class="btn s r" onclick="dc('${c.id}')">حذف المحادثة</button></div>`).join('')||'<p class="c mu">لا توجد محادثات</p>';
+if(S.at=='ver')b=D.users.filter(u=>u.vreq).map(u=>`<div class="card"><b>${nm(u)}</b><div class="ac"><button class="btn s" onclick="tv('${u.id}')">قبول</button><button class="btn s g" onclick="rej('${u.id}')">رفض</button></div></div>`).join('')||'<p class="c mu">لا توجد طلبات</p>';
+if(S.at=='cfg')b=`<div class="card">${sw('reg','السماح بالتسجيل')}${sw('groups','السماح بالمجموعات')}${sw('pay','تفعيل الدفع')}<input id="an" value="${esc(D.cfg.appName)}" placeholder="اسم التطبيق"><button class="btn" onclick="cfgS()">حفظ</button></div><div class="card"><b>رسالة للجميع</b><textarea id="bc" rows="3"></textarea><button class="btn" onclick="bcast()">إرسال</button></div>`;
+return`<div class="hd"><button onclick="auth.signOut()">🔒</button><b class="gr">لوحة الإدارة</b><a class="btn s" href="index.html" style="background:#ffffff40">التطبيق</a></div><div class="tabs" style="overflow:auto">${tabs.map(t=>`<button class="${S.at==t[0]?'on':''}" style="white-space:nowrap" onclick="S.at='${t[0]}';S.rs=0;render()">${t[1]}</button>`).join('')}</div><div class="pad">${b}</div>`}
+function sheet(){const u=U(S.sheet);if(!u)return'';return`<div class="sh" onclick="if(event.target==this){S.sheet=null;render()}"><div><b>تعديل رصيد ${esc(u.name)}</b><input id="ba" type="number" inputmode="numeric" placeholder="المبلغ"><div class="ac"><button class="btn" onclick="bal('${u.id}',1)">إضافة</button><button class="btn r" onclick="bal('${u.id}',-1)">سحب</button></div><button class="btn g" onclick="S.sheet=null;render()">إلغاء</button></div></div>`}
+function render(){document.documentElement.dataset.theme=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';$('app').innerHTML=view()+(S.sheet?sheet():'')}
+render();
+</script></body></html>
+~~~~~
+
+### firebase-config.js
+~~~~~
+// الصق هنا إعدادات Firebase (Project settings > Your apps > Web app)
+window.FB_CONFIG={
+  apiKey:"",
+  authDomain:"",
+  projectId:"",
+  storageBucket:"",
+  messagingSenderId:"",
+  appId:""
+};
+
+~~~~~
+
+### firestore.rules
+~~~~~
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn(){ return request.auth != null; }
+    function me(){ return /databases/$(database)/documents/users/$(request.auth.uid); }
+    function isAdmin(){ return signedIn() && exists(me()) && get(me()).data.admin == true; }
+    function ok(){ return signedIn() && (!exists(me()) || get(me()).data.banned != true); }
+    function chatMembers(c){ return get(/databases/$(database)/documents/chats/$(c)).data.members; }
+
+    match /cfg/{d} { allow read: if true; allow write: if isAdmin(); }
+
+    match /users/{id} {
+      allow read: if ok();
+      allow create: if signedIn() && request.auth.uid == id
+        && request.resource.data.bal == 100 && request.resource.data.verified == false
+        && request.resource.data.admin == false && request.resource.data.banned == false
+        && request.resource.data.vreq == false;
+      allow update: if isAdmin()
+        || (ok() && request.auth.uid == id
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','bio','vreq','contacts']))
+        || (ok() && request.auth.uid == id && !('code' in resource.data)
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['code']))
+        || (ok() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['bal'])
+            && (request.auth.uid == id ? request.resource.data.bal < resource.data.bal
+                                       : request.resource.data.bal > resource.data.bal));
+      allow delete: if isAdmin();
+    }
+
+    match /chats/{id} {
+      allow read: if isAdmin() || (ok() && request.auth.uid in resource.data.members);
+      allow create: if ok() && request.auth.uid in request.resource.data.members;
+      allow update: if isAdmin() || (ok() && request.auth.uid in resource.data.members);
+      allow delete: if isAdmin();
+    }
+
+    // صور ورسائل صوتية (مخزنة كنص base64 داخل Firestore)
+    match /media/{id} {
+      allow create: if ok() && request.resource.data.from == request.auth.uid
+        && request.auth.uid in chatMembers(request.resource.data.chat);
+      allow read: if isAdmin() || (ok() && request.auth.uid in chatMembers(resource.data.chat));
+      allow delete: if isAdmin();
+    }
+
+    // صورة البروفيل مع الخصوصية: public | private (أنا فقط) | custom (قائمة allow)
+    match /photos/{id} {
+      allow read: if isAdmin() || (ok() && (request.auth.uid == id
+        || resource.data.vis == 'public'
+        || (resource.data.vis == 'custom' && request.auth.uid in resource.data.allow)));
+      allow write: if ok() && request.auth.uid == id;
+    }
+
+    // الحالات (قصص) بحد أقصى أسبوع (مع سماح 5 دقائق لفرق الساعة)
+    match /stories/{id} {
+      allow read: if ok();
+      allow create, update: if ok() && request.auth.uid == id
+        && request.resource.data.exp > request.time
+        && request.resource.data.exp <= request.time + duration.value(605100, 's');
+      allow delete: if isAdmin() || (ok() && request.auth.uid == id);
+    }
+
+    // مكالمات WebRTC (إشارات فقط)
+    match /calls/{cid} {
+      allow create: if ok() && request.resource.data.from == request.auth.uid;
+      allow read, update: if ok() && (request.auth.uid == resource.data.from || request.auth.uid == resource.data.to);
+      allow delete: if isAdmin();
+      match /{sub}/{x} {
+        allow read, write: if ok() && (request.auth.uid == get(/databases/$(database)/documents/calls/$(cid)).data.from
+                                    || request.auth.uid == get(/databases/$(database)/documents/calls/$(cid)).data.to);
+      }
+    }
+  }
+}
+
+~~~~~
+
+### storage.rules
+~~~~~
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // فيديو الحالة: ملف واحد لكل مستخدم (يُستبدل عند نشر حالة جديدة)
+    match /stories/{uid}/{f} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == uid
+        && (request.resource == null
+            || (request.resource.size < 150 * 1024 * 1024 && request.resource.contentType.matches('video/.*')));
+    }
+  }
+}
+
+~~~~~
+
+### test.html
+~~~~~
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>فحص التطبيق</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script><script src="firebase-config.js"></script>
+<style>body{font-family:system-ui,Tahoma,sans-serif;margin:0;padding:16px;background:#f1f3f5;color:#111}h2{margin:0 0 8px}button{background:#2aabee;color:#fff;border:0;border-radius:10px;padding:12px 16px;font-size:16px;margin:4px 0 4px 6px}#out div{background:#fff;border-radius:10px;padding:10px;margin:6px 0;line-height:1.6;word-break:break-word}@media(prefers-color-scheme:dark){body{background:#0e1621;color:#f1f5f9}#out div{background:#17212b}}</style></head><body>
+<h2>فحص التطبيق</h2><p>ارفع هذا الملف بجانب index.html (بعد لصق إعدادات Firebase) ثم افتحه من رابط GitHub Pages واضغط «ابدأ الفحص». اسمح للكاميرا والميكروفون عند الطلب.</p>
+<button onclick="run()">ابدأ الفحص</button><button onclick="copyRes()" style="background:#6b7280">نسخ النتيجة</button><div id="out"></div>
+<script>
+const out=document.getElementById('out'),R=[];
+function L(ok,t,d){const s=(ok===true?'✅ ':ok===false?'❌ ':'⚠️ ')+t+(d?' — '+d:'');R.push(s);const e=document.createElement('div');e.textContent=s;out.appendChild(e)}
+async function T(name,f){try{const r=await f();if(typeof r=='string')L(null,name,r);else L(r!==false,name)}catch(e){L(false,name,e.code||e.message||String(e))}}
+function copyRes(){const t=R.join('\n');try{navigator.clipboard.writeText(t).then(()=>alert('تم النسخ'),()=>alert(t))}catch(e){alert(t)}}
+async function run(){out.innerHTML='';R.length=0;let auth,fs,u;
+L(null,'الجهاز',navigator.userAgent.slice(0,80));
+await T('الصفحة على HTTPS',()=>{if(location.protocol!='https:')throw'لا — الكاميرا والميكروفون لن تعملا'});
+await T('إعدادات Firebase موجودة',()=>{if(!window.FB_CONFIG||!FB_CONFIG.apiKey||!FB_CONFIG.projectId)throw'firebase-config.js فارغ'});
+if(!window.firebase)return L(false,'مكتبة Firebase لم تُحمَّل','تحقق من الإنترنت');
+await T('تهيئة Firebase',()=>{firebase.initializeApp(FB_CONFIG);auth=firebase.auth();fs=firebase.firestore()});
+if(!fs)return;
+await T('قراءة إعدادات التطبيق (تتطلب نشر القواعد)',async()=>{await fs.doc('cfg/app').get()});
+const nm='t'+Math.random().toString(36).slice(2,8);
+await T('إنشاء حساب تجريبي (هل Email/Password مفعّل؟)',async()=>{u=(await auth.createUserWithEmailAndPassword(nm+'@chat.local','test1234')).user});
+if(u){
+await T('إنشاء وثيقة مستخدم حسب القواعد',()=>fs.doc('users/'+u.uid).set({code:'00000000',name:'اختبار',user:nm,bio:'',bal:100,verified:false,vreq:false,banned:false,admin:false,contacts:[]}));
+await T('قراءة المستخدمين',()=>fs.collection('users').limit(1).get());
+await T('صورة البروفيل: كتابة ثم حذف',async()=>{const r=fs.doc('photos/'+u.uid);await r.set({data:'',vis:'private',allow:[]});await r.get();await r.delete()});
+await T('حالة أسبوع: نشر ثم حذف',async()=>{const r=fs.doc('stories/'+u.uid);await r.set({text:'t',data:'',t:Date.now(),exp:firebase.firestore.Timestamp.fromMillis(Date.now()+6*864e5)});await r.delete()});
+await T('حالة أطول من أسبوع يجب أن تُرفض',async()=>{const r=fs.doc('stories/'+u.uid);try{await r.set({text:'t',data:'',t:Date.now(),exp:firebase.firestore.Timestamp.fromMillis(Date.now()+8*864e5)});await r.delete();return false}catch(e){return e.code=='permission-denied'}});
+await T('Storage: رفع فيديو صغير ثم حذفه (للحالات بالفيديو)',async()=>{if(!firebase.storage)throw'مكتبة Storage غير محمّلة';const r=firebase.storage().ref('stories/'+u.uid+'/media');await r.put(new Blob(['x'],{type:'video/mp4'}));await r.getDownloadURL();await r.delete()});
+await T('استعلام محادثاتي',()=>fs.collection('chats').where('members','array-contains',u.uid).get());
+await T('استعلام المكالمات الواردة',()=>fs.collection('calls').where('to','==',u.uid).where('status','==','ringing').get());
+await T('حذف الحساب التجريبي من Auth',()=>u.delete());
+try{await auth.signOut()}catch(e){}
+L(null,'ملاحظة','بقيت وثيقة مستخدم باسم «اختبار» في Firestore؛ احذفها من لوحة الإدارة أو الكونسول');
+}
+await T('الميكروفون',async()=>{const s=await navigator.mediaDevices.getUserMedia({audio:true});s.getTracks().forEach(t=>t.stop())});
+await T('الكاميرا',async()=>{const s=await navigator.mediaDevices.getUserMedia({video:true});s.getTracks().forEach(t=>t.stop())});
+await T('تسجيل الصوت (MediaRecorder)',()=>{if(!window.MediaRecorder)throw'غير مدعوم'});
+await T('ضغط الصور (Canvas)',()=>{const c=document.createElement('canvas');c.width=c.height=10;if(!c.toDataURL('image/jpeg',.6).startsWith('data:image/jpeg'))throw'فشل'});
+await T('النسخ إلى الحافظة',async()=>{await navigator.clipboard.writeText('12345678')});
+await T('الوصول لخادم STUN (للمكالمات)',()=>new Promise((ok,no)=>{if(!window.RTCPeerConnection)return no('WebRTC غير مدعوم');const p=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});let f=0;p.onicecandidate=e=>{if(e.candidate&&e.candidate.candidate.includes('srflx')){f=1;p.close();ok()}};p.createDataChannel('x');p.createOffer().then(o=>p.setLocalDescription(o));setTimeout(()=>{if(!f){p.close();no('لم يصل رد STUN خلال 6 ثوان (قد تفشل المكالمات)')}},6000)}));
+L(null,'انتهى الفحص','اضغط «نسخ النتيجة» وأرسلها لي');
+}
+</script></body></html>
+
+~~~~~
+
+### README.md
+~~~~~
+# تطبيق المحادثات (Firebase) - ملف التسليم (2026-10-12)
+
+## الملفات
+index.html (التطبيق) | admin.html (الإدارة) | firebase-config.js | firestore.rules
+demo/ = النسخة التجريبية المحلية القديمة (بدون Firebase) للمرجع فقط.
+
+## الإعداد
+1. console.firebase.google.com: أنشئ مشروعاً جديداً (لا تستخدم مشروع المحفظة حتى لا تُستبدل قواعده).
+2. Project settings > Add app > Web: انسخ firebaseConfig إلى firebase-config.js.
+3. Authentication > Sign-in method: فعّل Email/Password.
+4. Authentication > Settings > Authorized domains: أضف USERNAME.github.io
+5. Firestore Database > Create (Production) ثم Rules: الصق firestore.rules ثم Publish (أعد اللصق بعد كل تحديث للملف).
+6. ارفع index.html و admin.html و firebase-config.js إلى مستودع GitHub ثم Settings > Pages > Deploy from branch.
+7. سجّل حساباً من التطبيق، ثم Firestore > users > وثيقتك: غيّر admin إلى true و verified إلى true.
+8. ادخل admin.html بنفس اسم المستخدم وكلمة السر.
+9. (للفيديو) Storage > Get started ثم Rules: الصق storage.rules ثم Publish (قد يتطلب خطة Blaze).
+
+## المزايا
+- حسابات وتراسل حقيقي، خاص/مجموعات في تبويبين، حذف رسائل (عندي/للجميع) وحذف محادثات.
+- رمز رقمي من 8 أرقام لكل حساب (الإعدادات): نسخ ومشاركة، ويُستخدم للبحث من "محادثة جديدة". الحسابات القديمة تحصل على رمز تلقائياً عند الدخول.
+- إرسال صور (تُضغط إلى 900px) وتسجيل رسائل صوتية (حتى 90 ثانية) - مخزنة داخل Firestore (مجموعة media).
+- مكالمة صوتية ومكالمة فيديو (WebRTC) من أيقونتي 📞 🎥 داخل المحادثة الخاصة.
+- صورة بروفيل مع خصوصية: عامة (الجميع) / أنا فقط / مخصصة (أشخاص تختارهم).
+- حالة (قصة) نص و/أو صورة أو فيديو (حتى 5 دقائق)، تبقى أسبوعاً وتظهر أعلى قائمة المحادثات (الفيديو يحتاج Storage).
+- الدفع (رصيد افتراضي)، توثيق بالعلامة الزرقاء، ولوحة إدارة (مستخدمون، محادثات، توثيق، إعدادات، رسالة للجميع).
+
+- واجهة بنمط تلجرام (شريط تنقل سفلي، ملف شخصي، إعدادات بأقسام) وحفظ الوسائط في ذاكرة الهاتف وملفاته منفصلاً عن Firebase (الإعدادات > البيانات والتخزين).
+
+## حدود معروفة (مهم)
+- لم تُنفَّذ بعد: مجلدات المحادثات، الأجهزة، اللغة، المنشورات المؤرشفة، QR حقيقي، إشعارات فورية.
+- المكالمات تستخدم STUN فقط: قد تفشل بين بعض شبكات الجوال/الجدران النارية. الحل لاحقاً: خادم TURN.
+- لم تُجرَّب أي ميزة على Firebase حي ولا على هاتف حقيقي؛ فُحصت صياغة الكود فقط.
+- الدفع/الرصيد غير آمن بالكامل (يحتاج Cloud Functions لقيمة حقيقية).
+- الرسائل مصفوفة داخل وثيقة المحادثة (حد 1MB لكل محادثة؛ الوسائط منفصلة). الصور/الصوت داخل Firestore تستهلك حصته المجانية.
+- تعمل الكاميرا والميكروفون فقط عبر HTTPS (GitHub Pages مناسب).
+- الحالات أسبوع؛ طول الفيديو (5 دقائق) يُفحص في التطبيق فقط، وقواعد Storage تفرض الحجم (150MB) ونوع الملف. يُستبدل ملف الفيديو عند نشر حالة جديدة.
+- الإدارة لا تحذف الحالات ولا تعرض سجل المكالمات بعد (من المقترحات القادمة).
+- حذف مستخدم من الإدارة يحذف وثيقته ومحادثاته فقط؛ احذف حساب Auth من الكونسول.
+
+~~~~~
+
+(النسخة التجريبية المحلية القديمة موجودة فقط داخل الملف المضغوط في مجلد demo/)
