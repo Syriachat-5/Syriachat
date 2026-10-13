@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>فحص SyriaChat</title>
+<style>body{font-family:sans-serif;margin:0;padding:14px;background:#fff;color:#111;font-size:16px;line-height:1.7}h2{margin:4px 0 10px}.r{border-bottom:1px solid #ddd;padding:7px 0;word-break:break-all}.ok{color:#0a7d3b}.no{color:#c00;font-weight:bold}iframe{position:absolute;left:-9999px;width:360px;height:640px}</style></head><body>
+<h2>فحص SyriaChat</h2><div id="o"></div>
+<script>
+var o=document.getElementById('o');
+function add(t,ok){var d=document.createElement('div');d.className='r '+(ok===true?'ok':ok===false?'no':'');d.textContent=(ok===true?'\u2705 ':ok===false?'\u274c ':'\u2022 ')+t;o.appendChild(d)}
+add('\u0627\u0644\u0648\u0642\u062a: '+new Date().toLocaleString());
+add('\u0627\u0644\u0645\u062a\u0635\u0641\u062d: '+navigator.userAgent.slice(0,90));
+var libs=['app','auth','firestore','storage'],i=0;
+function loadNext(){
+ if(i>=libs.length){afterLibs();return}
+ var n=libs[i++],s=document.createElement('script');
+ s.src='https://www.gstatic.com/firebasejs/9.23.0/firebase-'+n+'-compat.js';
+ s.onload=function(){add('\u062a\u062d\u0645\u064a\u0644 firebase-'+n+' \u0646\u062c\u062d',true);loadNext()};
+ s.onerror=function(){add('\u0641\u0634\u0644 \u062a\u062d\u0645\u064a\u0644 firebase-'+n+' (gstatic.com \u0645\u062d\u062c\u0648\u0628 \u0623\u0648 \u0627\u0644\u0625\u0646\u062a\u0631\u0646\u062a \u0636\u0639\u064a\u0641/VPN)',false);loadNext()};
+ document.head.appendChild(s)}
+function afterLibs(){
+ add('typeof firebase = '+typeof firebase,typeof firebase!=='undefined');
+ fetch('firebase-config.js',{cache:'no-store'}).then(function(r){add('firebase-config.js \u0627\u0644\u062d\u0627\u0644\u0629 '+r.status,r.ok)}).catch(function(e){add('firebase-config.js \u062e\u0637\u0623 '+e,false)});
+ fetch('index.html',{cache:'no-store'}).then(function(r){return r.text().then(function(t){
+  add('index.html \u0627\u0644\u062d\u0627\u0644\u0629 '+r.status+' \u0627\u0644\u062d\u062c\u0645 '+t.length+' \u062d\u0631\u0641',r.ok&&t.length>50000);
+  var g=t.indexOf('function box(t,d)')>-1;
+  add(g?'\u0627\u0644\u0646\u0633\u062e\u0629 \u0627\u0644\u0645\u0646\u0634\u0648\u0631\u0629 \u0647\u064a \u0627\u0644\u062c\u062f\u064a\u062f\u0629 (\u0641\u064a\u0647\u0627 \u062d\u0627\u0631\u0633 \u0627\u0644\u0623\u062e\u0637\u0627\u0621)':'\u0627\u0644\u0645\u0646\u0634\u0648\u0631 \u0647\u0648 index.html \u0627\u0644\u0642\u062f\u064a\u0645 (\u0644\u0645 \u062a\u0631\u0641\u0639 \u0627\u0644\u062c\u062f\u064a\u062f \u0623\u0648 \u0644\u0645 \u062a\u0646\u062a\u0647 \u0627\u0644\u0646\u0634\u0631 \u0628\u0639\u062f)',g);
+  runFrame()})}).catch(function(e){add('index.html \u062e\u0637\u0623 '+e,false)})}
+function runFrame(){
+ var f=document.createElement('iframe');f.src='index.html?d='+Date.now();
+ f.onload=function(){var w=f.contentWindow;
+  try{w.addEventListener('error',function(e){add('\u062e\u0637\u0623 \u062f\u0627\u062e\u0644 \u0627\u0644\u062a\u0637\u0628\u064a\u0642: '+e.message+' @'+e.lineno+':'+e.colno,false)});
+   w.addEventListener('unhandledrejection',function(e){add('\u0648\u0639\u062f \u0645\u0631\u0641\u0648\u0636: '+(e.reason&&e.reason.message||e.reason),false)})}catch(x){}
+  setTimeout(function(){try{var a=w.document.getElementById('app');var h=a?a.innerHTML.trim().length:-1;
+   add('\u0645\u062d\u062a\u0648\u0649 \u0627\u0644\u0648\u0627\u062c\u0647\u0629 \u0628\u0639\u062f 6 \u062b\u0648\u0627\u0646: '+h+' \u062d\u0631\u0641'+(h>0?'':' (\u0641\u0627\u0631\u063a = \u0634\u0627\u0634\u0629 \u0628\u064a\u0636\u0627\u0621)'),h>0);
+   if(h>0)add('\u0627\u0644\u0646\u0635 \u0627\u0644\u0638\u0627\u0647\u0631: '+(a.innerText||'').replace(/\s+/g,' ').slice(0,120))}catch(x){add('\u062a\u0639\u0630\u0631 \u0641\u062d\u0635 \u0627\u0644\u0648\u0627\u062c\u0647\u0629: '+x,false)}
+   add('\u0627\u0646\u062a\u0647\u0649 \u0627\u0644\u0641\u062d\u0635 \u2014 \u0635\u0648\u0651\u0631 \u0647\u0630\u0647 \u0627\u0644\u0634\u0627\u0634\u0629 \u0648\u0623\u0631\u0633\u0644\u0647\u0627 \u0644\u064a')},6000)};
+ document.body.appendChild(f)}
+loadNext();
+</script></body></html>
