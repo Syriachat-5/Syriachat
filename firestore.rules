@@ -4,25 +4,35 @@ service cloud.firestore {
     function signedIn(){ return request.auth != null; }
     function me(){ return /databases/$(database)/documents/users/$(request.auth.uid); }
     function isAdmin(){ return signedIn() && exists(me()) && get(me()).data.admin == true; }
-    function ok(){ return signedIn() && (!exists(me()) || get(me()).data.banned != true); }
+    function ok(){ return signedIn() && (!exists(me()) || (get(me()).data.banned != true && !(get(me()).data.get('status','ok') in ['pending','rejected']))); }
     function chatMembers(c){ return get(/databases/$(database)/documents/chats/$(c)).data.members; }
 
     match /cfg/{d} { allow read: if true; allow write: if isAdmin(); }
 
     match /users/{id} {
-      allow read: if ok();
+      allow read: if ok() || (signedIn() && request.auth.uid == id);
       allow create: if signedIn() && request.auth.uid == id
+        && request.resource.data.status == 'pending' && request.resource.data.setup == false
         && request.resource.data.bal == 100 && request.resource.data.verified == false
         && request.resource.data.admin == false && request.resource.data.banned == false
         && request.resource.data.vreq == false;
       allow update: if isAdmin()
         || (ok() && request.auth.uid == id
-            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','bio','vreq','contacts']))
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','bio','vreq','contacts','setup']))
         || (ok() && request.auth.uid == id && !('code' in resource.data)
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['code']))
         || (ok() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['bal'])
             && (request.auth.uid == id ? request.resource.data.bal < resource.data.bal
                                        : request.resource.data.bal > resource.data.bal));
+      allow delete: if isAdmin();
+    }
+
+    // عدد الحسابات لكل جهاز (يتحكم به الأدمن من لوحة الإدارة)
+    match /devs/{id} {
+      allow read: if true;
+      allow create: if isAdmin() || (signedIn() && request.resource.data.n == 1 && request.resource.data.extra == 0);
+      allow update: if isAdmin() || (signedIn() && request.resource.data.n == resource.data.n + 1
+        && request.resource.data.extra == resource.data.extra);
       allow delete: if isAdmin();
     }
 
