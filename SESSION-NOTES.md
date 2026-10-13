@@ -106,3 +106,6 @@ index.html, package.json, firestore.rules (الأخيرة تُنسخ في Fireba
    إن لم يُفعَّل FCM يبقى النظام القديم (إشعارات محلية والتطبيق في الخلفية).
 6. package.json: أُضيفت push-notifications و geolocation و camera. قواعد جديدة: tokens, reports.
 ملفات جديدة: functions/, firebase.json, .firebaserc, .github/workflows/deploy-functions.yml, PUSH-SETUP.md.
+
+## إصلاح انهيار التطبيق
+السبب المرجّح: إضافة push-notifications بلا google-services.json تسقط التطبيق عند register(). أُزيلت من package.json وعُطّل pushInit حتى window.PUSH_ENABLED=true (انظر PUSH-SETUP.md).

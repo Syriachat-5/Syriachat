@@ -23,3 +23,10 @@ GitHub -> Settings -> Secrets and variables -> Actions -> New secret باسم FI
 - انشر firestore.rules المحدثة (فيها tokens و reports).
 - ارفع index.html و package.json ثم أعد بناء APK وثبّته. عند أول فتح يطلب إذن الإشعارات (وافق).
 - جرّب: أغلق التطبيق من قائمة التطبيقات الأخيرة، وأرسل لك رسالة/اتصالاً من حساب آخر.
+
+## مهم: الإشعارات مع إغلاق التطبيق معطّلة افتراضياً
+تشغيل FCM بدون google-services.json يُسقط التطبيق (Crash). لذلك أُزيلت إضافة push-notifications من package.json وعُطّل الكود.
+بعد إتمام الخطوات 1-3 أعلاه فقط:
+1. أضف في package.json: "@capacitor/push-notifications": "^6.0.0"
+2. أضف في firebase-config.js السطر: window.PUSH_ENABLED=true;
+3. أعد بناء APK.

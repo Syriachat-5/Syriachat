@@ -692,7 +692,7 @@ let PUSHON=false;
 const prefs=()=>{const a=PFall(),k=Object.keys(a);return{mute:k.filter(x=>a[x].mute),priv:k.filter(x=>a[x].priv||a[x].lock),blk:BLK()}};
 function syncPrefs(){if(D.me&&PUSHON)fs.doc('tokens/'+D.me).set(prefs(),{merge:true}).catch(()=>{})}
 for(const n of ['togPF','togLock','blockU']){const o=window[n];window[n]=function(){const r=o.apply(this,arguments);setTimeout(syncPrefs,400);return r}}
-async function pushInit(){const P=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.PushNotifications;if(!P||!D.me)return;try{let p=await P.checkPermissions();if(p.receive!=='granted')p=await P.requestPermissions();if(p.receive!=='granted')return;
+async function pushInit(){if(window.PUSH_ENABLED!==true)return;const P=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.PushNotifications;if(!P||!D.me)return;try{let p=await P.checkPermissions();if(p.receive!=='granted')p=await P.requestPermissions();if(p.receive!=='granted')return;
 try{await P.createChannel({id:'msgs',name:'الرسائل',importance:4,visibility:1,vibration:true});await P.createChannel({id:'calls',name:'المكالمات',importance:5,visibility:1,vibration:true})}catch(e){}
 if(!window._pl){window._pl=1;P.addListener('registration',t=>{PUSHON=true;fs.doc('tokens/'+D.me).set({t:t.value,ts:Date.now(),...prefs()},{merge:true}).catch(()=>{PUSHON=false})});P.addListener('registrationError',()=>{PUSHON=false})}
 await P.register()}catch(e){}}
