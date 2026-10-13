@@ -7,6 +7,25 @@ service cloud.firestore {
     function ok(){ return signedIn() && (!exists(me()) || (get(me()).data.banned != true && !(get(me()).data.get('status','ok') in ['pending','rejected']))); }
     function chatMembers(c){ return get(/databases/$(database)/documents/chats/$(c)).data.members; }
 
+    // صلاحيات المجموعات: تعديل (owner, admins, closed, deny, name, photo, cdate) للمنشئ/المشرف فقط،
+    // والعضو العادي يستطيع مغادرة المجموعة فقط (إزالة نفسه من members)
+    function groupOk(){
+      let r = resource.data; let n = request.resource.data;
+      let ch = n.diff(r).affectedKeys();
+      return r.get('type','private') != 'group'
+        || request.auth.uid == r.get('owner', r.members[0])
+        || request.auth.uid in r.get('admins', [])
+        || (!ch.hasAny(['owner','admins','closed','deny','name','photo','cdate'])
+            && (!ch.hasAny(['members'])
+                || (!(request.auth.uid in n.members) && n.members.size() == r.members.size() - 1)));
+    }
+
+    // آخر ظهور / متصل الآن
+    match /presence/{id} {
+      allow read: if ok();
+      allow write: if ok() && request.auth.uid == id;
+    }
+
     match /cfg/{d} { allow read: if true; allow write: if isAdmin(); }
 
     match /users/{id} {
@@ -39,7 +58,7 @@ service cloud.firestore {
     match /chats/{id} {
       allow read: if isAdmin() || (ok() && request.auth.uid in resource.data.members);
       allow create: if ok() && request.auth.uid in request.resource.data.members;
-      allow update: if isAdmin() || (ok() && request.auth.uid in resource.data.members);
+      allow update: if isAdmin() || (ok() && request.auth.uid in resource.data.members && groupOk());
       allow delete: if isAdmin();
     }
 
