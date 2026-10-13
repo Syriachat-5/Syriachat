@@ -1,0 +1,63 @@
+# SyriaChat - ملاحظات الجلسة (12-10-2026)
+
+## وصف المشروع
+تطبيق محادثات ويب (index.html + admin.html) يعمل بـ Firebase (Auth بالبريد: username@chat.local + Firestore).
+يُنشر على GitHub Pages: https://syriachat-5.github.io/Syriachat/
+ويُحوَّل إلى APK عبر Capacitor + GitHub Actions (الـ APK يحمّل الموقع من الرابط أعلاه).
+المستودع: github.com/Syriachat-5/Syriachat (فرع main)
+
+## هيكل الملفات (كلها في جذر المستودع)
+.github/workflows/android.yml  <- بناء APK (تشغيل يدوي فقط)
+package.json, capacitor.config.json
+index.html, admin.html, manifest.webmanifest, sw.js, firebase-config.js
+firestore.rules, storage.rules, README.md
+icon-180.png, icon-192.png, icon-512.png, icon-maskable-512.png
+assets/css/style.css
+
+## ما أنجزناه
+1. فُحص المستودع: كان ينقصه admin.html و manifest.webmanifest (أُضيفا).
+2. فشل البناء الأول: خطوة App icon -> "convert: command not found".
+   الحل: android.yml الجديد يثبّت ImageMagick (apt) قبل الاستخدام.
+3. التطبيق عمل على الهاتف (شاشة التسجيل تظهر). رسالة "الاسم مطلوب وكلمة السر 6 أحرف" سببها ترك حقل الاسم فارغاً.
+4. لوحة الإدارة: لا كلمة سر خاصة. تسجيل الدخول بحساب عادي ثم في Firebase Console ->
+   Firestore -> users -> مستند الحساب: admin=true و verified=true.
+
+## طريقة بناء APK
+GitHub -> Actions -> Build Android APK -> Run workflow -> بعد ~5-8 دقائق
+حمّل Artifact باسم SyriaChat-apk (بداخله app-debug.apk).
+
+## الخطوة الحالية
+نعدّل نسخة تجريبية (SyriaChat-dev) بطلبات المستخدم، وبعد الانتهاء نرفعها إلى المستودع.
+عند رفع التعديلات: ارفع الملفات المعدّلة فقط إلى الجذر (نفس المسارات أعلاه).
+بعد تعديل index.html/admin.html: يظهر التغيير في التطبيق تلقائياً بعد نشر Pages (لا حاجة لإعادة بناء APK)،
+وإعادة البناء مطلوبة فقط إذا تغيّرت الأيقونة/الأذونات/capacitor.config.json.
+
+## لمتابعة العمل على هاتف آخر
+افتح محادثة جديدة مع Claude، ارفع SyriaChat-dev.zip، والصق: "هذا مشروعي، اقرأ SESSION-NOTES.md ونتابع التعديل".
+
+## التعديلات الجديدة (النسخة التجريبية SyriaChat-dev)
+1. المكالمات: إضافة خوادم TURN (openrelay.metered.ca) لحل مشكلة عدم سماع/رؤية الطرف الآخر على شبكات الجوال،
+   وتشغيل صوت/فيديو الطرف الآخر بشكل صريح مع زر "اضغط لتشغيل الصوت" إن منع النظام التشغيل التلقائي.
+   لتغيير خوادم TURN: أضف في firebase-config.js:  window.TURN_SERVERS=[{urls:'turn:...',username:'..',credential:'..'}];
+2. الإشعارات: دعم إشعارات أندرويد الأصلية عبر @capacitor/local-notifications (package.json) مع قناتين: الرسائل والمكالمات.
+   تعمل ما دام التطبيق في الخلفية؛ للإشعارات بعد إغلاقه تماماً يلزم FCM + Cloud Function (خطوة قادمة اختيارية).
+3. زر الرجوع في الهاتف: يرجع من المحادثة/النافذة إلى القائمة بدل الخروج من التطبيق.
+4. الحالات: قائمة المشاهدين لصاحب الحالة (stories/{uid}/views) + حقل رد على الحالة يصل كرسالة مقتبسة في المحادثة.
+   يتطلب نشر firestore.rules الجديدة (Firebase Console -> Firestore -> Rules -> Publish).
+
+## ملفات تُرفع للمستودع بعد الموافقة
+index.html, package.json, firestore.rules (الأخيرة تُنسخ في Firebase Console وليس GitHub)
+بعد رفع package.json: شغّل Build Android APK من جديد وثبّت الـ APK الجديد (الإشعارات الأصلية تحتاجه).
+
+## الواجهة الجديدة (تبويبات سفلية) - هذه الجلسة
+تبويبات: الدردشات (list) / التحديثات (updates) / المجتمعات (comm) / المكالمات (calls) + الإعدادات (settings) بصفحة الملف الشخصي.
+- الدردشات: بحث، مؤرشفة (arch: حقل arch.{uid} في مستند المحادثة)، قائمة ⋮ (مجموعة جديدة، قوائم الرسائل الجماعية bc،
+  الأجهزة المرتبطة devices، مميزة بنجمة starred، قراءة الكل، الإعدادات)، زر أرشفة داخل المحادثة، نجمة على الرسالة.
+- التحديثات: بطاقات الحالة + القنوات (مجموعة channels الجديدة في Firestore: name, owner, followers[], posts[]) + استكشاف/إنشاء قناة.
+- المجتمعات: مجموعة chats بحقل comm:true.
+- المكالمات: سجل (من مجموعة calls), مكالمة/جدولة (localStorage tgsch + إشعار)/لوحة أرقام (بالرمز الرقمي)/مفضلة (tgfav).
+- الإعدادات: الاشتراكات، الأجهزة المرتبطة، الحساب، الخصوصية، القوائم، الدردشات (نسخة احتياطية JSON)، الشكل (وضع ليلي + لون + خلفية)،
+  رسائل جماعية، الإشعارات، التخزين، ولي الأمر (قفل برمز + إخفاء حالات)، الوصول (تباين/خط غامق/حجم)، اللغة.
+- بيانات محلية بالجهاز: tgx (تفضيلات)، tgstar، tgbc، tgfav، tgsch، tgclr.
+- الشيفرة الجديدة موجودة في index.html داخل الكتلة التي تبدأ بتعليق "واجهة جديدة (تبويبات سفلية)".
+مطلوب عند الرفع: نشر firestore.rules المحدّثة (أضيفت قواعد channels و stories/views).

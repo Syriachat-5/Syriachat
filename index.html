@@ -66,7 +66,61 @@ input,textarea{width:100%;padding:11px;border:1px solid var(--bd);border-radius:
 .fab{bottom:104px;left:18px;width:62px;height:62px;display:grid;place-items:center}.fab svg{width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .fab2{position:absolute;left:24px;bottom:178px;width:50px;height:50px;border-radius:50%;border:0;background:var(--bg2);color:var(--tx);box-shadow:0 2px 8px #0003;display:grid;place-items:center}.fab2 svg{stroke:currentColor;fill:none;stroke-width:1.8;width:24px;height:24px}
 .b{background:var(--bg2)}.b.me{background:var(--me)}.cp{background:var(--bg2)}.sh>div{background:var(--bg2)}.pd{padding:0 14px 8px}
-.btn{border-radius:var(--br,10px)}</style></head><body><div id="app"></div><input id="fi" type="file" accept="image/*" hidden onchange="sendImg(this)"><input id="pf" type="file" accept="image/*" hidden onchange="pickPhoto(this)"><input id="sf" type="file" accept="image/*" hidden onchange="pickStory(this)"><input id="sv" type="file" accept="video/*" hidden onchange="pickVid(this)">
+.btn{border-radius:var(--br,10px)}:root{--bg:#fff;--bg2:#f1f3f4;--pr:#2e9e5b;--chip:#d8f3de;--me:#d9fdd3;--bub:#fff;--bd:#e7e9ea}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b141a;--bg2:#1f2c34;--pr:#3dbb73;--chip:#1d3b2b;--me:#144d37;--bub:#1f2c34;--bd:#233138}}
+:root[data-theme="dark"]{--bg:#0b141a;--bg2:#1f2c34;--pr:#3dbb73;--chip:#1d3b2b;--me:#144d37;--bub:#1f2c34;--bd:#233138}
+.b{background:var(--bub)}.b.me{background:var(--me)}
+.hd{background:var(--bg)}
+html.hc{filter:contrast(1.18)}html.bold *{font-weight:600}
+.top2{display:flex;align-items:center;gap:2px;padding:14px 14px 6px;flex:none}
+.top2 button{background:none;border:0;color:var(--tx);padding:9px;display:grid;place-items:center}
+.top2 svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ttl2{font-size:28px;font-weight:700;color:var(--pr)}.ttl3{font-size:26px;font-weight:600;color:var(--tx)}
+.sbar{display:flex;align-items:center;gap:10px;background:var(--bg2);border-radius:28px;padding:0 18px}
+.sbar input{border:0;background:none;padding:14px 0;outline:none}
+.sbar svg{width:22px;height:22px;stroke:var(--mu);fill:none;stroke-width:2;flex:none}
+.nb2{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--bd);display:flex;padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px));z-index:8}
+.nb2>div{flex:1;display:grid;justify-items:center;gap:3px;font-size:13px;color:var(--tx)}
+.nb2 i{position:relative;width:64px;height:32px;border-radius:16px;display:grid;place-items:center}
+.nb2 svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nb2 .on i{background:var(--chip);color:var(--pr)}.nb2 .on span{font-weight:700}
+.nbd{position:absolute;top:-4px;right:6px;background:var(--pr);color:#fff;border-radius:10px;font-size:11px;padding:1px 6px;min-width:18px;text-align:center}
+.fab{bottom:84px!important;left:18px;border-radius:18px;background:var(--pr)}
+.fab2{bottom:160px!important;left:24px;border-radius:14px;background:var(--bg2)}
+.gn{color:var(--pr);font-weight:700}.gb{background:var(--pr)!important;color:#fff}
+.tk svg{width:15px;height:15px;stroke:var(--mu);fill:none;stroke-width:2.4;vertical-align:-2px}
+.rg{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--pr)}
+.arc{align-items:center}.arc .ai{width:56px;height:56px;display:grid;place-items:center}.arc .ai svg{width:26px;height:26px;stroke:var(--mu);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sh0{position:absolute;inset:0;z-index:12}
+.pm{position:absolute;left:10px;top:54px;background:var(--bg);border-radius:16px;box-shadow:0 8px 28px #0005;min-width:240px;padding:8px 0}
+.pm div{padding:14px 22px;font-size:17px}.pm div:active{background:var(--bg2)}
+.scr2{flex:1;overflow:auto;padding-bottom:110px}
+.sech{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 8px;font-size:21px;font-weight:600}
+.pill{background:var(--bg2);border:0;border-radius:22px;padding:9px 20px;color:var(--tx);font-size:16px}
+.strow{display:flex;gap:10px;overflow-x:auto;padding:0 14px 8px}
+.sc{flex:none;width:112px;height:190px;border-radius:18px;background-size:cover;background-position:center;color:#fff;display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:12px 6px 10px;text-align:center;overflow:hidden}
+.sc .av{box-shadow:0 0 0 3px var(--pr);width:46px;height:46px}.sc p{font-size:13px;line-height:1.35;word-break:break-word}.sc b{font-size:14px;text-shadow:0 1px 3px #000a}
+.sc.add{background:var(--bg2);color:var(--tx)}.sc.add b{text-shadow:none}.sc.add .av{box-shadow:none;width:64px;height:64px;margin-top:30px}
+.pl{position:absolute;bottom:-4px;right:-4px;width:24px;height:24px;border-radius:50%;background:var(--pr);display:grid;place-items:center;border:2px solid var(--bg2)}.pl svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:3}
+.cirs{display:flex;padding:14px 8px 4px}
+.ci{display:grid;justify-items:center;gap:8px;flex:1;font-size:14px;text-align:center}
+.ci i{width:66px;height:66px;border-radius:50%;background:var(--bg2);display:grid;place-items:center}
+.ci svg,.ib svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ib{background:none;border:0;color:var(--tx);padding:8px;display:grid;place-items:center}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;direction:ltr}
+.kp button{padding:16px;font-size:22px;border:0;border-radius:14px;background:var(--bg2);color:var(--tx);display:grid;place-items:center}
+.kp svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2}
+.btn.big{padding:15px;font-size:17px;border-radius:30px}
+.cimg{font-size:56px;background:var(--chip);border-radius:28px;display:inline-block;padding:26px 34px}
+.prof{background:var(--chip);background-image:radial-gradient(circle at 12% 30%,#0000000d 6px,transparent 7px),radial-gradient(circle at 78% 20%,#0000000d 9px,transparent 10px),radial-gradient(circle at 45% 70%,#0000000d 7px,transparent 8px),radial-gradient(circle at 90% 75%,#0000000d 6px,transparent 7px);position:relative;padding-bottom:78px;flex:none}
+.ptop{display:flex;align-items:center;gap:2px;padding:14px 12px;direction:ltr}
+.ptop button{background:none;border:0;color:var(--tx);padding:9px}.ptop svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ptop button:first-child{order:9}
+.bub2{background:var(--bg);color:var(--tx);border-radius:26px;padding:14px 28px;width:max-content;max-width:70%;margin:34px auto 0;text-align:center;font-size:17px;position:relative}
+.pav{position:absolute;left:50%;transform:translateX(-50%);bottom:-70px;width:140px;height:140px;font-size:50px;border:6px solid var(--bg);margin:0}
+.srow2{display:flex;align-items:center;gap:16px;padding:16px 22px}.srow2 .t{flex:1}.srow2 b{font-size:19px;font-weight:500}.srow2 small{display:block;color:var(--mu);font-size:15px;margin-top:3px}
+.srow2 i{width:34px;display:grid;place-items:center;color:var(--mu)}.srow2 svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+</style></head><body><div id="app"></div><input id="fi" type="file" accept="image/*" hidden onchange="sendImg(this)"><input id="pf" type="file" accept="image/*" hidden onchange="pickPhoto(this)"><input id="sf" type="file" accept="image/*" hidden onchange="pickStory(this)"><input id="sv" type="file" accept="video/*" hidden onchange="pickVid(this)">
 <div id="callui" style="display:none;position:fixed;inset:0;background:#000;z-index:50;flex-direction:column;align-items:center;color:#fff"><div id="cn" style="padding:18px;font-size:18px;z-index:2"></div><button id="tp" class="btn" style="display:none;position:absolute;top:50%;z-index:3" onclick="playRemote();this.style.display='none'">🔊 اضغط لتشغيل الصوت</button><video id="rv" autoplay playsinline onclick="playRemote();$('tp').style.display='none'" style="width:100%;flex:1;min-height:0;object-fit:cover;background:#111"></video><video id="lv" autoplay playsinline muted style="position:absolute;top:70px;left:12px;width:90px;border-radius:10px;background:#333"></video><div style="padding:18px;display:flex;gap:16px"><button class="btn g" onclick="togMic()">🎙 كتم</button><button class="btn r" onclick="endCall()">إنهاء</button></div></div>
 <div id="inc" style="display:none;position:fixed;inset:0;background:#000d;z-index:60;flex-direction:column;align-items:center;justify-content:center;gap:18px;color:#fff"><div id="incn" style="font-size:20px"></div><div style="display:flex;gap:16px"><button class="btn" onclick="answerCall()">رد</button><button class="btn r" onclick="rejectCall()">رفض</button></div></div><script>
 const K='tgdb1',$=id=>document.getElementById(id),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -110,7 +164,7 @@ const logout=()=>auth.signOut();
 const MC={},PH={},MP={};let PM=null,REC=null,RT=0;
 const mb0=x=>x.del?'<i class="mu">🚫 رسالة محذوفة</i>':x.pay?`<b>💸 دفعة ${x.pay}</b>`:x.kind=='img'?`<img data-mid="${x.mid}" style="max-width:100%;border-radius:8px;min-height:60px;background:var(--bg2)">`:x.kind=='aud'?`<audio controls data-mid="${x.mid}" onclick="event.stopPropagation()" style="max-width:100%"></audio>`:esc(x.text);
 const mb=x=>x.del||!x.sty?mb0(x):`<div class="q">↩ رد على حالة ${esc(x.sty.o==D.me?'حالتك':((U(x.sty.o)||{}).name||'حالة'))} · ${esc(x.sty.k)}${x.sty.tx?': '+esc(x.sty.tx):''}</div>`+mb0(x);
-const avc=c=>`<div class="av"${c.type=='private'&&other(c)?` data-u="${other(c).id}"`:''}>${ini(plain(c))}</div>`;
+const avc=c=>`<div class="av${ring0(c)}"${c.type=='private'&&other(c)?` data-u="${other(c).id}"`:''}>${ini(plain(c))}</div>`;
 function setAv(el,d){el.style.backgroundImage='url('+d+')';el.style.backgroundSize='cover';el.style.backgroundPosition='center';el.textContent=''}
 function hydrate(){document.querySelectorAll('[data-mid]').forEach(el=>{const id=el.dataset.mid;if(MC[id])el.src=MC[id];else if(!MP[id]){MP[id]=1;const set=v=>document.querySelectorAll('[data-mid="'+id+'"]').forEach(e=>e.src=v);lget('m:'+id).then(v=>{if(v){MC[id]=v;MP[id]=0;set(v);return}return fs.doc('media/'+id).get().then(x=>{if(x.exists){MC[id]=x.data().data;if(D.auto!==false)lset('m:'+id,MC[id]);set(MC[id])}MP[id]=0})}).catch(()=>{MP[id]=0})}});
 document.querySelectorAll('[data-u]').forEach(el=>{const id=el.dataset.u;if(PH[id])setAv(el,PH[id]);else if(PH[id]===undefined){PH[id]=null;fs.doc('photos/'+id).get().then(x=>{const d=x.exists&&x.data().data;if(d){PH[id]=d;document.querySelectorAll('[data-u="'+id+'"]').forEach(e=>setAv(e,d))}}).catch(()=>{})}})}
@@ -170,9 +224,9 @@ function mkPC(ref,mine){PC=new RTCPeerConnection(ICE);LS.getTracks().forEach(t=>
 PC.oniceconnectionstatechange=()=>{if(PC&&PC.iceConnectionState=='connected')playRemote()};
 PC.onconnectionstatechange=()=>{if(!PC)return;const s=PC.connectionState;if(s=='connected')playRemote();if(s=='failed'){toast('تعذر الاتصال بالشبكة، حاول مرة أخرى');endCall()}else if(s=='closed')endCall()}}
 function watchCand(ref,coll){cu.push(ref.collection(coll).onSnapshot(x=>x.docChanges().forEach(ch=>{if(ch.type=='added'&&PC)PC.addIceCandidate(ch.doc.data()).catch(()=>{})})))}
-async function startCall(type){const c=C(S.chat),o=other(c);if(PC||!o)return;
+async function startCall(type,ov){const c=ov?null:C(S.chat),o=ov?U(ov):other(c);if(PC||!o)return;
 try{LS=await media(type)}catch(e){return toast('تعذر الوصول للكاميرا/الميكروفون')}
-const ref=fs.collection('calls').doc();CID=ref.id;mkPC(ref,'callerCandidates');callUI(true,plain(c)+' — جارٍ الاتصال...',type=='video');
+const ref=fs.collection('calls').doc();CID=ref.id;mkPC(ref,'callerCandidates');callUI(true,(c?plain(c):o.name)+' — جارٍ الاتصال...',type=='video');
 const off=await PC.createOffer();await PC.setLocalDescription(off);
 try{await ref.set({from:D.me,to:o.id,type,offer:{type:off.type,sdp:off.sdp},status:'ringing',t:Date.now()})}catch(e){endCall(1);return toast('تعذر بدء المكالمة')}
 let got=0;cu.push(ref.onSnapshot(async x=>{const d=x.data();if(!d||!PC)return;if(d.answer&&!got){got=1;await PC.setRemoteDescription(d.answer);watchCand(ref,'calleeCandidates')}if(d.status=='ended'||d.status=='rejected')endCall(1)}));
@@ -224,7 +278,7 @@ ${S.sq?`<div class="pd"><input id="sq" placeholder="بحث" value="${esc(S.q||''
 ${stBar()}<div class="list" id="lst">${rowsHTML()}</div>
 <button class="fab2" onclick="S.sheet={t:'ns'};S.sImg=null;S.sVid=null;render()">${ic('camera')}</button><button class="fab" onclick="nav('new')">${ic('newmsg')}</button>`},
 chat(){const c=C(S.chat);if(!c)return V.list();const pr=c.type=='private';
-return`<div class="hd"><button onclick="nav('list')">→</button>${avc(c)}<b class="gr">${title(c)}</b>${pr?`<button onclick="startCall('audio')">📞</button><button onclick="startCall('video')">🎥</button>`:''}<button onclick="S.sheet={t:'dc'};render()">🗑</button></div>
+return`<div class="hd"><button onclick="nav('list')">→</button>${avc(c)}<b class="gr">${title(c)}</b>${pr?`<button onclick="startCall('audio')">📞</button><button onclick="startCall('video')">🎥</button>`:''}<button onclick="togArch('${c.id}')">${isArch(c)?'📤':'📥'}</button><button onclick="S.sheet={t:'dc'};render()">🗑</button></div>
 <div id="msgs" class="msgs" style="background:${wpc()}">${vis(c).map(x=>{const mi=x.from==D.me;return`<div class="b ${mi?'me':''}" onclick="S.sheet={t:'msg',id:'${x.id}'};render()">${!pr&&!mi?`<small>${nm(U(x.from))}</small>`:''}${mb(x)}<em>${tm(x.t)}</em></div>`}).join('')}</div>
 <div class="cp">${pr&&D.cfg.pay?'<button onclick="S.sheet={t:\'pay\'};render()">💸</button>':''}<button onclick="$('fi').click()">📷</button><button onclick="recVoice()">${REC?'⏹':'🎤'}</button><input id="ti" placeholder="اكتب رسالة" onkeydown="if(event.key==\'Enter\')send()"><button onclick="send()">➤</button></div>`},
 new(){const m=me(),cs=(m.contacts||[]).map(U).filter(u=>u&&!u.banned);
@@ -256,8 +310,8 @@ return`<div class="top" dir="ltr"><button onclick="S.sheet={t:'code'};render()">
 <button class="btn" style="width:100%" onclick="S.sheet={t:'ns'};S.sImg=null;S.sVid=null;render()">إضافة منشور 📷</button>
 ${a?`<div class="card2" onclick="S.sheet={t:'story',id:'${m.id}'};render()" style="margin-top:10px"><div>${a.url?'🎞 فيديو ':a.data?'🖼 صورة ':''}${esc(a.text||'')}</div></div>`:'<p class="c mu">لا توجد منشورات</p>'}</div>`}
 };
-function sheet(){const h=S.sheet,x=(h.t=='msg'?C(S.chat).msgs.find(m=>m.id==h.id):0);let b='';
-if(h.t=='msg'){b=`<button class="btn g" onclick="msgDel('${h.id}',0)">حذف عندي</button>`+(x&&x.from==D.me&&!x.del?`<button class="btn r" onclick="msgDel('${h.id}',1)">حذف للجميع</button>`:'')}
+function sheet(){if(['pm','pick','fav','dial','sched','ext'].includes(S.sheet.t))return xsheet();const h=S.sheet,x=(h.t=='msg'?C(S.chat).msgs.find(m=>m.id==h.id):0);let b='';
+if(h.t=='msg'){b=`<button class="btn" onclick="togStar('${h.id}')">${isStar(h.id)?'☆ إزالة النجمة':'⭐ تمييز بنجمة'}</button><button class="btn g" onclick="msgDel('${h.id}',0)">حذف عندي</button>`+(x&&x.from==D.me&&!x.del?`<button class="btn r" onclick="msgDel('${h.id}',1)">حذف للجميع</button>`:'')}
 if(h.t=='msg'&&x&&!x.del&&x.mid&&MC[x.mid])b=`<button class="btn" onclick="saveMsg('${x.mid}','${x.kind}')">⬇ حفظ في ملفات الهاتف</button>`+b;
 if(h.t=='dc')b='<b>حذف هذه المحادثة من حسابك؟</b><button class="btn r" onclick="chatDel()">حذف المحادثة</button>';
 if(h.t=='pay')b=`<b>تحويل رصيد (رصيدك ${me().bal})</b><input id="pa" type="number" inputmode="numeric" placeholder="المبلغ"><button class="btn" onclick="pay()">إرسال</button>`;
@@ -267,15 +321,18 @@ if(h.t=='menu')b=`<button class="btn g" onclick="nav('settings')">الإعداد
 if(h.t=='code'){const m=me();b=`<b>رمزي الرقمي</b><b style="font-size:34px;letter-spacing:4px;text-align:center" dir="ltr">${m.code||''}</b><div class="ac"><button class="btn" onclick="cp('${m.code}')">نسخ</button><button class="btn g" onclick="shareCode('${m.code}')">مشاركة</button></div>`}
 return`<div class="sh" onclick="if(event.target==this){S.sheet=null;render()}"><div>${b}<button class="btn g" onclick="S.sheet=null;render()">إلغاء</button></div></div>`}
 function render(){document.documentElement.dataset.theme=D.dark?'dark':'light';const t=$('ti'),tv=t?t.value:'',f=t&&document.activeElement==t;const a=$('app');a.style.fontSize=(D.fs||16)+'px';
-a.innerHTML=(V[S.v]||V.auth)()+(['list','contacts','settings','profile'].includes(S.v)?navBar():'')+(S.sheet?sheet():'');if(S.v=='chat')markSeen();const m=$('msgs');if(m)m.scrollTop=m.scrollHeight;const n=$('ti');if(n){n.value=tv;if(f)n.focus()}
+a.innerHTML=(V[S.v]||V.auth)()+(['list','updates','comm','calls'].includes(S.v)?navBar():'')+(S.sheet?sheet():'');if(S.v=='chat')markSeen();const m=$('msgs');if(m)m.scrollTop=m.scrollHeight;const n=$('ti');if(n){n.value=tv;if(f)n.focus()}
 if(S.v=='storage')lsize().then(r=>{const e=$('lz');if(e)e.textContent=r.n+' ملف · '+(r.b*.75/1048576).toFixed(1)+' MB'});hydrate()}
 function listen(id){fs.doc('photos/'+id).get().then(x=>{PM=x.exists?x.data():null}).catch(()=>{});un.push(
 fs.collection('users').onSnapshot(s=>{D.users=s.docs.map(d=>({id:d.id,...d.data()}));ui()},e=>toast('خطأ اتصال: '+e.code)),
 fs.collection('chats').where('members','array-contains',id).onSnapshot(s=>{chatNotif(s);D.chats=s.docs.map(d=>({id:d.id,...d.data()}));ui()},e=>toast('خطأ اتصال: '+e.code)),
 fs.doc('cfg/app').onSnapshot(s=>{if(s.exists)D.cfg={...D.cfg,...s.data()};ui()},()=>{}),
 fs.collection('stories').onSnapshot(s=>{D.stories=s.docs.map(d=>({id:d.id,...d.data()}));ui()},()=>{}),
+fs.collection('channels').onSnapshot(s=>{D.channels=s.docs.map(d=>({id:d.id,...d.data()}));ui()},()=>{}),
+fs.collection('calls').where('from','==',id).onSnapshot(s=>{CL1=s.docs.map(d=>({id:d.id,...d.data()}));ui()},()=>{}),
+fs.collection('calls').where('to','==',id).onSnapshot(s=>{CL2=s.docs.map(d=>({id:d.id,...d.data()}));ui()},()=>{}),
 fs.collection('calls').where('to','==',id).where('status','==','ringing').onSnapshot(s=>s.docChanges().forEach(ch=>{const d={id:ch.doc.id,...ch.doc.data()};if(ch.type=='added'){if(Date.now()-d.t<60000&&!PC&&!INC){INC=d;ringNotif(d);$('incn').textContent=((U(d.from)||{}).name||'')+(d.type=='video'?' — مكالمة فيديو':' — مكالمة صوتية');$('inc').style.display='flex'}}else if(ch.type=='removed'&&INC&&INC.id==d.id){INC=null;$('inc').style.display='none'}}),()=>{}))}
-function ui(){const m=me();if(m&&m.banned){auth.signOut();return toast('هذا الحساب محظور')}ensureCode();const a=document.activeElement;if(a&&/INPUT|TEXTAREA/.test(a.tagName)&&a.id!='ti')return;if(S.sheet&&(S.sheet.t=='story'||S.sheet.t=='ns'))return;if([...document.querySelectorAll('audio,video')].some(x=>!x.paused))return;render()}
+function ui(){const m=me();if(m&&m.banned){auth.signOut();return toast('هذا الحساب محظور')}ensureCode();const a=document.activeElement;if(a&&/INPUT|TEXTAREA/.test(a.tagName)&&a.id!='ti')return;if(S.sheet&&['story','ns','sched','dial'].includes(S.sheet.t))return;if([...document.querySelectorAll('audio,video')].some(x=>!x.paused))return;render()}
 auth.onAuthStateChanged(u=>{un.forEach(f=>f());un=[];D.users=[];D.chats=[];if(u){D.me=u.uid;PM=null;S.pe=null;S.gc=0;if(S.v=='auth')S.v='list';listen(u.uid)}else{D.me=null;S.v='auth';S.mode='login';for(const k in PH)delete PH[k]}render()});
 fs.doc('cfg/app').get().then(s=>{if(s.exists){D.cfg={...D.cfg,...s.data()};if(S.v=='auth')render()}}).catch(()=>{});render();setInterval(()=>{if(D.me)ui()},30000);
 
@@ -289,7 +346,7 @@ function applyCfg(){const r=document.documentElement.style;if(D.cfg.pr)r.setProp
 if(D.cfg.ver){let o=null;try{o=localStorage.getItem('tgver');localStorage.setItem('tgver',D.cfg.ver)}catch(e){}if(o&&o!=String(D.cfg.ver))softReload()}}
 fs.doc('cfg/app').onSnapshot(s=>{if(s.exists){D.cfg={...D.cfg,...s.data()};applyCfg();render()}},()=>{});
 const _render=render;render=function(){applyCfg();if(D.cfg.off){document.documentElement.dataset.theme=D.dark?'dark':'light';$('app').innerHTML='<div class="pad c" style="margin-top:18vh"><div style="font-size:64px">🛠️</div><h2>'+esc(D.cfg.appName)+'</h2><p class="mu">'+esc(D.cfg.offMsg||'التطبيق متوقف مؤقتاً للصيانة')+'</p></div>';return}_render()};
-let AC;function beep(f,d,n){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state=='suspended')AC.resume();for(let i=0;i<n;i++){const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+i*(d+.08);o.frequency.value=f;o.connect(g);g.connect(AC.destination);g.gain.setValueAtTime(.25,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.start(t);o.stop(t+d)}}catch(e){}}
+let AC;function beep(f,d,n){if(X.nosnd)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state=='suspended')AC.resume();for(let i=0;i<n;i++){const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+i*(d+.08);o.frequency.value=f;o.connect(g);g.connect(AC.destination);g.gain.setValueAtTime(.25,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.start(t);o.stop(t+d)}}catch(e){}}
 document.addEventListener('click',()=>{try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume()}catch(e){}if(D.notif&&'Notification' in window&&Notification.permission=='default')Notification.requestPermission()},{once:true});
 const LN=()=>window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.LocalNotifications;
 async function nativeInit(){const l=LN();if(!l)return;try{const p=await l.checkPermissions();if(p.display!=='granted')await l.requestPermissions()}catch(e){}
@@ -304,7 +361,184 @@ s.docChanges().forEach(ch=>{if(ch.type=='removed')return;const c=ch.doc.data(),o
 if(document.hidden){showNote(t,b,ch.doc.id)}else if(!(S.v=='chat'&&S.chat==ch.doc.id)){beep(880,.15,2);toast(t+': '+b)}})})}
 let RT2=null;function ringNotif(d){const u=U(d.from)||{name:''},t=(u.name||'مكالمة')+(d.type=='video'?' — مكالمة فيديو':' — مكالمة صوتية');showNote('📞 '+t,'اضغط للرد','call',1);clearInterval(RT2);beep(660,.4,2);RT2=setInterval(()=>{if(!INC){clearInterval(RT2);return}beep(660,.4,2)},2500)}
 
-(function(){const TABS=['auth','list','contacts','settings','profile'];let stk=[],pop=0;
+/* ================= واجهة جديدة (تبويبات سفلية) ================= */
+let X={};try{X=JSON.parse(localStorage.getItem('tgx')||'{}')}catch(e){}
+const sx=()=>{try{localStorage.setItem('tgx',JSON.stringify(X))}catch(e){}};
+const LJ=k=>{try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return[]}};
+const LW=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let CL1=[],CL2=[];
+Object.assign(IC,{
+phone:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>',
+video:'<rect x="2" y="6" width="13" height="12" rx="2"/><path d="M15 10l7-4v12l-7-4z"/>',
+calendar:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+dialpad:'<circle cx="5" cy="5" r="1.5"/><circle cx="12" cy="5" r="1.5"/><circle cx="19" cy="5" r="1.5"/><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/><circle cx="5" cy="19" r="1.5"/><circle cx="12" cy="19" r="1.5"/><circle cx="19" cy="19" r="1.5"/>',
+heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/>',
+people:'<circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c3 0 4.8 1.8 4.8 4.5"/>',
+status:'<circle cx="12" cy="12" r="9" stroke-dasharray="3 2"/><circle cx="12" cy="12" r="4"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',
+archive:'<rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8M12 11v5M9.5 14l2.5 2.5 2.5-2.5"/>',
+devices:'<rect x="2" y="6" width="14" height="10" rx="1.5"/><path d="M1 19h16M18 9h4v9h-4z"/>',
+lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+lists:'<rect x="4" y="3" width="14" height="14" rx="2"/><path d="M8 7h6M8 11h6M8 21h11a1 1 0 0 0 1-1V8"/>',
+subs:'<path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M12 8l1.4 2.8 3.1.4-2.2 2.2.5 3.1L12 15l-2.8 1.5.5-3.1-2.2-2.2 3.1-.4z"/>',
+globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+palette:'<path d="M12 3a9 9 0 1 0 0 18c1.2 0 2-.8 2-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7" r="1"/>',
+access:'<circle cx="12" cy="4.5" r="2"/><path d="M5 8.5l7 1.5 7-1.5M12 10v5l-3 6M12 15l3 6"/>',
+bcast:'<path d="M4 6h16v10H9l-5 4z"/><path d="M8 10h8"/>',
+shield:'<path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><circle cx="12" cy="10" r="2"/><path d="M8.5 15.5c1-1.5 2.2-2 3.5-2s2.5.5 3.5 2"/>',
+check:'<path d="M5 12.5l4.5 4.5L19 7"/>',
+star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+back:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+newcall:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/><path d="M17 3v6M14 6h6"/>'
+});
+const hasSt=id=>act().some(x=>x.id==id);
+const ring0=c=>c.type=='private'&&other(c)&&hasSt(other(c).id)?' rg':'';
+const lastT=c=>(vis(c).slice(-1)[0]||{}).t||0;
+const isArch=c=>!!(c.arch&&c.arch[D.me]);
+function dateLbl(t){const d=new Date(t),n=new Date(),dd=Math.round((new Date(n.getFullYear(),n.getMonth(),n.getDate())-new Date(d.getFullYear(),d.getMonth(),d.getDate()))/864e5);return dd<=0?tm(t):dd==1?'أمس':d.toLocaleDateString('ar',{year:'numeric',month:'numeric',day:'numeric'})}
+const unreadAll=()=>mine().filter(c=>!isArch(c)).reduce((a,c)=>a+unread(c),0);
+const cts=()=>{const m=me(),ids=new Set(m.contacts||[]);mine().filter(c=>c.type=='private').forEach(c=>{const o=other(c);if(o)ids.add(o.id)});return[...ids].map(U).filter(u=>u&&!u.banned&&u.id!=D.me)};
+const hdb=t=>`<div class="hd"><button onclick="history.back()">→</button><b class="gr">${t}</b></div>`;
+const tab2=(t,k,extra)=>`<div class="top2"><b class="ttl3">${t}</b><span class="sp"></span>${extra||''}<button onclick="${k=='search'?'':''}S.sheet={t:'pm',k:'${k}'};render()">${ic('dots')}</button></div>`;
+const sbtn=`<button onclick="S.sq=!S.sq;if(!S.sq)S.q='';render();setTimeout(()=>{const e=$('sq');if(e)e.focus()},0)">${ic('search')}</button>`;
+const sbox=ph=>S.sq?`<div class="pd"><div class="sbar">${ic('search')}<input id="sq" placeholder="${ph||'بحث'}" value="${esc(S.q||'')}" oninput="S.q=this.value;render();setTimeout(()=>{const e=$('sq');if(e){e.focus();e.setSelectionRange(e.value.length,e.value.length)}},0)"></div></div>`:'';
+
+navBar=function(){const T=[['list','chat','الدردشات',unreadAll()],['updates','status','التحديثات',0],['comm','people','المجتمعات',0],['calls','phone','المكالمات',0]];
+return`<div class="nb2">${T.map(t=>`<div class="${S.v==t[0]?'on':''}" onclick="nav('${t[0]}',{q:'',sq:false})"><i>${ic(t[1])}${t[3]?`<b class="nbd">${t[3]}</b>`:''}</i><span>${t[2]}</span></div>`).join('')}</div>`};
+
+rowsHTML=function(){const q=(S.q||'').toLowerCase(),ar=!!S.arch;
+const a=mine().filter(c=>isArch(c)==ar&&(!q||plain(c).toLowerCase().includes(q)||vis(c).some(m=>String(m.text||'').toLowerCase().includes(q))));
+return a.sort((x,y)=>lastT(y)-lastT(x)).map(c=>{const lm=vis(c).slice(-1)[0],n=unread(c),ml=lm&&lm.from==D.me&&!lm.del;
+return`<div class="row" onclick="nav('chat',{chat:'${c.id}'})">${avc(c)}<div class="t"><b>${title(c)}</b>${c.comm?' <small>🏘</small>':c.type=='group'?' <small>👥</small>':''}<p>${ml?`<span class="tk">${ic('check')}</span> `:''}${prev(c)}</p></div><div class="rt"><small class="${n?'gn':''}">${lm?dateLbl(lm.t):''}</small>${n?`<span class="bd gb">${n}</span>`:''}</div></div>`}).join('')||`<p class="c mu" style="margin-top:40px">${ar?'لا توجد محادثات مؤرشفة':'لا توجد محادثات'}</p>`};
+
+V.list=function(){S.arch=false;const na=mine().filter(isArch).length;
+return`<div class="top2"><b class="ttl2">${esc(D.cfg.appName)}</b><span class="sp"></span><button onclick="S.sheet={t:'ns'};S.sImg=null;S.sVid=null;render()">${ic('camera')}</button><button onclick="S.sheet={t:'pm',k:'chats'};render()">${ic('dots')}</button></div>
+<div class="pd"><div class="sbar">${ic('search')}<input id="sq" placeholder="ابحث في المحادثات" value="${esc(S.q||'')}" oninput="S.q=this.value;$('lst').innerHTML=rowsHTML();hydrate()"></div></div>
+<div class="list"><div class="row arc" onclick="nav('arch')"><div class="ai">${ic('archive')}</div><b style="flex:1">مؤرشفة</b>${na?`<span class="mu">${na}</span>`:''}</div><div id="lst">${rowsHTML()}</div></div>
+<button class="fab" onclick="nav('new')">${ic('newmsg')}</button>`};
+V.arch=function(){S.arch=true;return hd2('المؤرشفة','list')+`<div class="list"><div id="lst">${rowsHTML()}</div></div>`};
+
+/* ---- قوائم النقاط الثلاث ---- */
+const PMI={chats:[['مجموعة جديدة',"nav('group')"],['قوائم الرسائل الجماعية',"nav('bc')"],['الأجهزة المرتبطة',"nav('devices')"],['مميزة بنجمة',"nav('starred')"],['قراءة الكل',"readAll()"],['الإعدادات',"nav('settings')"]],
+upd:[['إنشاء قناة',"nav('newchan')"],['استكشاف القنوات',"nav('explore')"],['الإعدادات',"nav('settings')"]],
+comm:[['إنشاء مجتمع',"nav('newcomm')"],['الإعدادات',"nav('settings')"]],
+calls:[['مسح سجل المكالمات',"clrCalls()"],['الإعدادات',"nav('settings')"]]};
+function readAll(){mine().forEach(c=>{const l=vis(c).slice(-1)[0];if(l)SEEN[c.id]=Math.max(SEEN[c.id]||0,l.t)});try{localStorage.setItem('tgseen',JSON.stringify(SEEN))}catch(e){}render();toast('تمت قراءة كل الرسائل')}
+function togArch(id){const c=C(id);if(!c)return;const a=isArch(c);fs.doc('chats/'+id).update({['arch.'+D.me]:a?FV.delete():true}).then(()=>{toast(a?'أُلغيت الأرشفة':'تمت الأرشفة');nav(a?'arch':'list',{arch:a})}).catch(()=>toast('تعذرت العملية'))}
+const isStar=id=>LJ('tgstar').includes(S.chat+'|'+id);
+function togStar(id){let a=LJ('tgstar');const k=S.chat+'|'+id;a=a.includes(k)?a.filter(x=>x!=k):a.concat(k);LW('tgstar',a);S.sheet=null;render();toast(a.includes(k)?'تم التمييز بنجمة':'أُزيلت النجمة')}
+V.starred=function(){const ks=LJ('tgstar'),out=[];mine().forEach(c=>c.msgs.forEach(m=>{if(ks.includes(c.id+'|'+m.id)&&!m.del)out.push({c,m})}));
+return hdb('مميزة بنجمة')+`<div class="list">${out.sort((a,b)=>b.m.t-a.m.t).map(({c,m})=>`<div class="row" onclick="nav('chat',{chat:'${c.id}'})"><div class="av sm" data-u="${m.from}">${ini((U(m.from)||{name:'؟'}).name)}</div><div class="t"><b>${nm(U(m.from))} <small>› ${esc(plain(c))}</small></b><p style="white-space:normal">${m.kind=='img'?'📷 صورة':m.kind=='aud'?'🎤 صوتية':esc(m.text||'')}</p></div><small class="mu">${dateLbl(m.t)}</small></div>`).join('')||'<p class="c mu" style="margin-top:60px">لا توجد رسائل مميزة بنجمة<br><small>اضغط على أي رسالة ثم «تمييز بنجمة»</small></p>'}</div>`};
+
+/* ---- الأجهزة المرتبطة ---- */
+const appUrl=()=>location.origin+location.pathname;
+function shareLink(){const u=appUrl();if(navigator.share)navigator.share({title:D.cfg.appName,url:u}).catch(()=>{});else cp(u)}
+V.devices=function(){const m=me();return hdb('الأجهزة المرتبطة')+`<div class="pad"><div class="card"><b>استخدام حسابك على أجهزة أخرى</b><small class="mu">سجّل الدخول بنفس اسم المستخدم (@${esc(m.user)}) وكلمة السر من أي جهاز آخر، من التطبيق أو من المتصفح عبر الرابط التالي، وتتزامن المحادثات تلقائياً.</small><div dir="ltr" class="mu" style="word-break:break-all">${esc(appUrl())}</div><div class="ac"><button class="btn" onclick="cp(appUrl())">نسخ الرابط</button><button class="btn g" onclick="shareLink()">مشاركة</button></div></div><div class="card"><b>هذا الجهاز</b><small class="mu">${navigator.userAgent.includes('Android')?'هاتف أندرويد':'متصفح'} · متصل الآن</small></div></div>`};
+
+/* ---- رسائل جماعية (قوائم بث) ---- */
+V.bc=function(){const a=LJ('tgbc');return hdb('قوائم الرسائل الجماعية')+`<div class="pad"><button class="btn" onclick="nav('newbc')">＋ قائمة جديدة</button>${a.map(l=>`<div class="card"><b>${esc(l.name)}</b><small class="mu">${l.m.length} مستلم</small><input id="bm${l.id}" placeholder="اكتب رسالة لجميع أفراد القائمة"><div class="ac"><button class="btn s" onclick="sendBC('${l.id}')">إرسال</button><button class="btn s r" onclick="delBC('${l.id}')">حذف</button></div></div>`).join('')||'<p class="c mu">لا توجد قوائم بعد. أنشئ قائمة لإرسال رسالة واحدة إلى عدة أشخاص دفعة واحدة.</p>'}</div>`};
+V.newbc=function(){return hd2('قائمة جديدة','bc')+`<div class="pad"><input id="bn" placeholder="اسم القائمة">${cts().map(u=>`<label class="sw"><span>${nm(u)}</span><input type="checkbox" class="bk" value="${u.id}"></label>`).join('')||'<p class="mu">أضف جهات اتصال أولاً</p>'}<button class="btn" onclick="mkBC()">حفظ القائمة</button></div>`};
+function mkBC(){const n=$('bn').value.trim(),m=[...document.querySelectorAll('.bk:checked')].map(x=>x.value);if(!n||!m.length)return toast('اكتب الاسم واختر مستلمين');const a=LJ('tgbc');a.push({id:uid(),name:n,m});LW('tgbc',a);nav('bc')}
+function delBC(id){LW('tgbc',LJ('tgbc').filter(l=>l.id!=id));render()}
+async function sendBC(id){const l=LJ('tgbc').find(x=>x.id==id),el=$('bm'+id),t=el&&el.value.trim();if(!l||!t)return toast('اكتب الرسالة');let ok=0;
+for(const u of l.m){try{const cid=await getPriv(u);await fs.doc('chats/'+cid).update({msgs:FV.arrayUnion({id:uid(),from:D.me,text:t,t:Date.now(),bc:1})});ok++}catch(e){}}
+el.value='';toast('أُرسلت إلى '+ok+' من '+l.m.length)}
+
+/* ---- التحديثات: الحالة + القنوات ---- */
+const PAL=['#6b4f4f','#3f5f7a','#4a6b4a','#6a4a7a','#7a5a2f','#2f6a6a'];
+const hsh=s=>[...String(s)].reduce((a,c)=>a+c.charCodeAt(0),0);
+const bgFor=(x,id)=>x.data?`background-image:linear-gradient(#0003,#0009),url(${x.data})`:`background:${x.url?'#222':PAL[hsh(id)%PAL.length]}`;
+const stCard=(id,x)=>{const u=U(id)||{name:'؟'};return`<div class="sc" onclick="S.sheet={t:'story',id:'${id}'};render()" style="${bgFor(x,id)}"><div class="av sm" data-u="${id}">${ini(u.name)}</div>${x.data?'':x.url?'<p>🎞</p>':`<p>${esc(String(x.text||'').slice(0,60))}</p>`}<b>${id==D.me?'حالتي':esc(String(u.name).split(' ').slice(0,2).join(' '))}</b></div>`};
+const chRow=(c,btn)=>`<div class="row" onclick="nav('chan',{ch:'${c.id}'})"><div class="av">${ini(c.name)}</div><div class="t"><b>${esc(c.name)}</b><p>${(c.followers||[]).length} متابع</p></div>${btn||''}</div>`;
+V.updates=function(){const q=(S.q||'').toLowerCase(),m=me(),mineSt=act().find(x=>x.id==D.me),H=X.hidest;
+const others=H?[]:act().filter(x=>x.id!=D.me&&(!q||String((U(x.id)||{}).name).toLowerCase().includes(q)));
+const chs=(D.channels||[]).filter(c=>!q||c.name.toLowerCase().includes(q)),fol=chs.filter(c=>(c.followers||[]).includes(D.me)||c.owner==D.me),sug=chs.filter(c=>!fol.includes(c)&&!(X.hc2||[]).includes(c.id)).slice(0,6);
+return tab2('التحديثات','upd',sbtn)+sbox('بحث في التحديثات')+`<div class="scr2"><div class="sech"><span>الحالة</span></div><div class="strow"><div class="sc add" onclick="S.sheet={t:'ns'};S.sImg=null;S.sVid=null;render()"><div class="av sm" data-u="${D.me}" style="position:relative">${ini(m.name)}<span class="pl">${ic('plus')}</span></div><b>إضافة حالة</b></div>${mineSt?stCard(D.me,mineSt):''}${others.map(x=>stCard(x.id,x)).join('')}</div>
+<div class="sech"><span>القنوات</span><span style="display:flex;gap:8px"><button class="pill" onclick="nav('newchan')">＋</button><button class="pill" onclick="nav('explore')">استكشاف</button></span></div>
+${fol.map(c=>chRow(c)).join('')||'<p class="mu" style="padding:0 16px">لا تتابع أي قناة بعد</p>'}
+${sug.length?`<div class="sech" style="font-size:15px;font-weight:400;color:var(--mu)"><span>البحث عن قنوات لمتابعتها</span></div>${sug.map(c=>chRow(c,`<button class="btn s" onclick="event.stopPropagation();followChan('${c.id}')">متابعة</button><button class="ib" onclick="event.stopPropagation();hideCh('${c.id}')">✕</button>`)).join('')}`:''}</div>
+<button class="fab2" onclick="S.sheet={t:'ns'};S.sImg=null;S.sVid=null;render()">${ic('pencil')}</button><button class="fab" onclick="S.sheet={t:'ns'};S.sImg=null;S.sVid=null;render();setTimeout(()=>$('sf')&&$('sf').click(),50)">${ic('camera')}</button>`};
+function hideCh(id){X.hc2=(X.hc2||[]).concat(id);sx();render()}
+function followChan(id){const c=(D.channels||[]).find(x=>x.id==id);if(!c)return;const f=(c.followers||[]).includes(D.me);fs.doc('channels/'+id).update({followers:f?FV.arrayRemove(D.me):FV.arrayUnion(D.me)}).then(()=>toast(f?'أُلغيت المتابعة':'تمت المتابعة')).catch(()=>toast('تعذرت العملية'))}
+V.explore=function(){return hd2('استكشاف القنوات','updates')+`<div class="list"><div class="row" onclick="nav('newchan')"><div class="av" style="background:var(--chip);color:var(--pr)">＋</div><b>إنشاء قناة جديدة</b></div>${(D.channels||[]).map(c=>chRow(c,c.owner==D.me?'<small class="mu">قناتك</small>':`<button class="btn s ${(c.followers||[]).includes(D.me)?'g':''}" onclick="event.stopPropagation();followChan('${c.id}')">${(c.followers||[]).includes(D.me)?'متابَعة':'متابعة'}</button>`)).join('')||'<p class="c mu" style="margin-top:50px">لا توجد قنوات بعد، كن أول من ينشئ قناة</p>'}</div>`};
+V.newchan=function(){return hd2('قناة جديدة','updates')+`<div class="pad"><input id="cnm" placeholder="اسم القناة"><button class="btn" onclick="mkChan()">إنشاء القناة</button><small class="mu">أي شخص يستطيع متابعة قناتك، وأنت فقط من ينشر فيها.</small></div>`};
+async function mkChan(){const n=$('cnm').value.trim();if(!n)return toast('اكتب اسم القناة');try{const r=await fs.collection('channels').add({name:n,owner:D.me,followers:[],posts:[],t:Date.now()});nav('chan',{ch:r.id})}catch(e){toast('تعذر إنشاء القناة')}}
+V.chan=function(){const c=(D.channels||[]).find(x=>x.id==S.ch);if(!c)return V.updates();const own=c.owner==D.me,fol=(c.followers||[]).includes(D.me);
+return hd2(esc(c.name),'updates')+`<div id="msgs" class="msgs" style="background:${wpc()}">${(c.posts||[]).map(p=>`<div class="b"${own?` onclick="delPost('${c.id}','${p.id}')"`:''}>${esc(p.text)}<em>${tm(p.t)}</em></div>`).join('')||'<p class="c mu">لا توجد منشورات بعد</p>'}</div>`+(own?`<div class="cp"><input id="ti" placeholder="اكتب منشوراً للمتابعين" onkeydown="if(event.key=='Enter')postChan('${c.id}')"><button onclick="postChan('${c.id}')">➤</button></div>`:`<div class="cp" style="justify-content:center"><button class="btn" style="background:var(--pr);color:#fff;font-size:16px;padding:11px 30px" onclick="followChan('${c.id}')">${fol?'إلغاء المتابعة':'＋ متابعة'}</button></div>`)};
+function postChan(id){const e=$('ti'),t=e&&e.value.trim();if(!t)return;e.value='';fs.doc('channels/'+id).update({posts:FV.arrayUnion({id:uid(),text:t,t:Date.now()})}).catch(()=>toast('تعذر النشر'))}
+async function delPost(id,pid){if(!confirm('حذف هذا المنشور؟'))return;try{const r=fs.doc('channels/'+id),d=(await r.get()).data();await r.update({posts:(d.posts||[]).filter(p=>p.id!=pid)})}catch(e){toast('تعذر الحذف')}}
+
+/* ---- المجتمعات ---- */
+V.comm=function(){const cs=mine().filter(c=>c.comm&&!isArch(c));
+return tab2('المجتمعات','comm')+`<div class="scr2">${cs.length?cs.map(c=>`<div class="row" onclick="nav('chat',{chat:'${c.id}'})"><div class="av">${ini(c.name)}</div><div class="t"><b>${esc(c.name)}</b><p>${c.members.length} عضو</p></div></div>`).join(''):`<div class="c" style="padding:28px 22px"><div class="cimg">👥📚🍎</div><h2 style="margin:18px 0 10px;font-weight:600">حافظ على تواصلك مع أي مجتمع</h2><p class="mu" style="line-height:1.9">تعمل المجتمعات على التقريب بين الأعضاء في مجموعات محددة الموضوع، بالإضافة إلى تسهيل تلقي إعلامات المشرف. وسيظهر هنا أي مجتمع تتم إضافتك إليه.</p><a style="color:var(--pr);font-weight:600;display:block;margin:18px 0" onclick="S.sheet={t:'ext',k:'ex'};render()">مشاهدة أمثلة على المجتمعات ›</a></div>`}<div style="padding:10px 16px"><button class="btn big" style="width:100%" onclick="nav('newcomm')">أنشئ مجتمعك</button></div></div>`};
+V.newcomm=function(){return hd2('مجتمع جديد','comm')+`<div class="pad"><input id="gn" placeholder="اسم المجتمع">${cts().map(u=>`<label class="sw"><span>${nm(u)}</span><input type="checkbox" class="gc" value="${u.id}"></label>`).join('')||'<p class="mu">أضف جهات اتصال أولاً لتدعوها للمجتمع</p>'}<button class="btn" onclick="mkComm()">إنشاء المجتمع</button></div>`};
+async function mkComm(){const n=$('gn').value.trim(),sel=[...document.querySelectorAll('.gc:checked')].map(x=>x.value);if(!n||!sel.length)return toast('اكتب اسم المجتمع واختر عضواً');
+try{const r=await fs.collection('chats').add({type:'group',comm:true,name:n,members:[D.me,...sel],msgs:[{id:uid(),from:D.me,text:'تم إنشاء المجتمع',t:Date.now()}],gone:{}});nav('chat',{chat:r.id})}catch(e){toast('تعذر الإنشاء')}}
+
+/* ---- المكالمات ---- */
+const clrSet=()=>LJ('tgclr');
+const callLog=()=>{const mp=new Map();[...CL1,...CL2].forEach(d=>mp.set(d.id,d));const h=clrSet(),a=[...mp.values()].filter(d=>!h.includes(d.id)&&d.t).sort((x,y)=>y.t-x.t),out=[];
+a.forEach(d=>{const peer=d.from==D.me?d.to:d.from,miss=d.to==D.me&&!d.answer,l=out[out.length-1];if(l&&l.peer==peer&&l.type==d.type&&l.miss==miss&&l.out==(d.from==D.me))l.n++;else out.push({peer,type:d.type,miss,out:d.from==D.me,t:d.t,n:1,ids:[d.id]});if(out.length&&out[out.length-1].ids.indexOf(d.id)<0)out[out.length-1].ids.push(d.id)});return out};
+function clrCalls(){const ids=[...CL1,...CL2].map(d=>d.id);LW('tgclr',clrSet().concat(ids));render();toast('تم مسح السجل')}
+function callUser(id,type){if(PC)return toast('أنت في مكالمة');S.sheet=null;render();startCall(type,id)}
+const favs=()=>LJ('tgfav');
+function togFav(id){const a=favs();LW('tgfav',a.includes(id)?a.filter(x=>x!=id):a.concat(id));render()}
+const ctRow=(u,full)=>`<div class="row" style="padding:6px 14px"><div class="av sm" data-u="${u.id}">${ini(u.name)}</div><b style="flex:1">${nm(u)}</b>${full?`<button class="ib" onclick="togFav('${u.id}')" style="color:${favs().includes(u.id)?'#f5b301':'var(--mu)'}">${favs().includes(u.id)?'★':'☆'}</button>`:''}<button class="ib" onclick="callUser('${u.id}','audio')">${ic('phone')}</button><button class="ib" onclick="callUser('${u.id}','video')">${ic('video')}</button></div>`;
+V.calls=function(){const q=(S.q||'').toLowerCase(),lg=callLog().filter(l=>!q||String((U(l.peer)||{}).name).toLowerCase().includes(q)),cs=cts().filter(u=>!q||u.name.toLowerCase().includes(q));
+const CI=(i,t,a)=>`<div class="ci" onclick="${a}"><i>${ic(i)}</i><span>${t}</span></div>`;
+return tab2('المكالمات','calls',sbtn)+sbox('بحث في المكالمات')+`<div class="scr2"><div class="cirs">${CI('phone','مكالمة',"S.sheet={t:'pick'};render()")}${CI('calendar','جدولة',"S.sheet={t:'sched'};render()")}${CI('dialpad','لوحة الأرقام',"S.sheet={t:'dial',n:''};render()")}${CI('heart','المفضلة',"S.sheet={t:'fav'};render()")}</div>
+${lg.length?`<div class="sech"><span>الحديثة</span></div>${lg.slice(0,40).map(l=>{const u=U(l.peer)||{name:'محذوف'};return`<div class="row" onclick="callUser('${l.peer}','${l.type}')"><div class="av" data-u="${l.peer}">${ini(u.name)}</div><div class="t"><b style="${l.miss?'color:#e5484d':''}">${esc(u.name)}${l.n>1?` (${l.n})`:''}</b><p><span style="color:${l.miss?'#e5484d':'#2e9e5b'}">${l.out?'↗':'↙'}</span> ${new Date(l.t).toLocaleString('ar',{day:'numeric',month:'long',hour:'numeric',minute:'2-digit'})}</p></div><span class="ib">${ic(l.type=='video'?'video':'phone')}</span></div>`}).join('')}`:''}
+<div class="sech"><span>بدء مكالمة</span><button class="pill" onclick="X.hcl=!X.hcl;sx();render()">${X.hcl?'إظهار':'إخفاء'}</button></div>${X.hcl?'':cs.map(u=>ctRow(u)).join('')||'<p class="mu c">لا توجد جهات اتصال بعد</p>'}</div>
+<button class="fab" onclick="S.sheet={t:'pick'};render()">${ic('newcall')}</button>`};
+
+/* ---- نوافذ سفلية جديدة ---- */
+const schAll=()=>LJ('tgsch');
+function addSch(){const u=$('su').value,t=$('st2').value,ty=$('sty').value;if(!u||!t)return toast('اختر الشخص والوقت');const at=new Date(t).getTime();if(!(at>Date.now()))return toast('اختر وقتاً في المستقبل');
+const a=schAll(),id=Math.floor(Math.random()*2e9);a.push({id,u,type:ty,at});LW('tgsch',a);const l=LN();if(l)l.schedule({notifications:[{id,title:'⏰ موعد مكالمة',body:'مكالمة '+(ty=='video'?'فيديو':'صوتية')+' مع '+((U(u)||{}).name||''),channelId:'calls',schedule:{at:new Date(at)}}]}).catch(()=>{});
+S.sheet={t:'sched'};render();toast('تمت الجدولة')}
+function delSch(id){LW('tgsch',schAll().filter(s=>s.id!=id));const l=LN();if(l)l.cancel({notifications:[{id}]}).catch(()=>{});render()}
+setInterval(()=>{const a=schAll(),n=Date.now();let ch=0;a.forEach(s=>{if(!s.fired&&s.at<=n&&n-s.at<36e5){s.fired=1;ch=1;toast('⏰ موعد مكالمة مع '+((U(s.u)||{}).name||''));beep(660,.3,3)}});if(ch)LW('tgsch',a)},20000);
+function dialKey(k){const h=S.sheet;if(!h||h.t!='dial')return;h.n=k=='b'?h.n.slice(0,-1):(h.n+k).slice(0,12);$('dn').textContent=h.n||' '}
+function dialCall(type){const n=(S.sheet.n||'').trim(),u=D.users.find(x=>x.code==n);if(!u||u.id==D.me)return toast('الرمز غير موجود');callUser(u.id,type)}
+function xsheet(){const h=S.sheet;let b='';
+if(h.t=='pm')return`<div class="sh0" onclick="if(event.target==this){S.sheet=null;render()}"><div class="pm">${(PMI[h.k]||[]).map(i=>`<div onclick="S.sheet=null;${i[1]}">${i[0]}</div>`).join('')}</div></div>`;
+if(h.t=='pick')b=`<b>اختر شخصاً للاتصال</b><div style="max-height:55vh;overflow:auto">${cts().map(u=>ctRow(u)).join('')||'<p class="mu c">لا توجد جهات اتصال</p>'}</div><button class="btn" onclick="nav('contacts')">＋ إضافة جهة اتصال</button>`;
+if(h.t=='fav'){const f=favs().map(U).filter(Boolean);b=`<b>المفضلة</b><div style="max-height:55vh;overflow:auto">${f.map(u=>ctRow(u,1)).join('')||'<p class="mu c">اضغط ☆ بجانب أي شخص لإضافته</p>'}<small class="mu">إضافة من جهات الاتصال:</small>${cts().filter(u=>!favs().includes(u.id)).map(u=>ctRow(u,1)).join('')}</div>`}
+if(h.t=='dial')b=`<b>لوحة الأرقام</b><div id="dn" dir="ltr" style="font-size:32px;text-align:center;min-height:44px;letter-spacing:3px">${esc(h.n||' ')}</div><small class="mu c">اكتب الرمز الرقمي للشخص</small><div class="kp">${['1','2','3','4','5','6','7','8','9','b','0','c'].map(k=>k=='b'?`<button onclick="dialKey('b')">⌫</button>`:k=='c'?`<button onclick="dialCall('audio')" style="background:var(--pr);color:#fff">${ic('phone')}</button>`:`<button onclick="dialKey('${k}')">${k}</button>`).join('')}</div><button class="btn g" onclick="dialCall('video')">مكالمة فيديو</button>`;
+if(h.t=='sched'){const a=schAll().sort((x,y)=>x.at-y.at);b=`<b>جدولة مكالمة</b><select id="su" style="padding:11px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)">${cts().map(u=>`<option value="${u.id}">${esc(u.name)}</option>`).join('')}</select><select id="sty" style="padding:11px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)"><option value="audio">صوتية</option><option value="video">فيديو</option></select><input id="st2" type="datetime-local"><button class="btn" onclick="addSch()">حفظ الموعد</button>${a.map(s=>`<div class="row" style="padding:4px 0"><span style="flex:1">${esc((U(s.u)||{name:'؟'}).name)} · ${new Date(s.at).toLocaleString('ar',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}${s.fired?' ✓':''}</span><button class="ib" onclick="delSch(${s.id})">🗑</button></div>`).join('')}<small class="mu">يصلك تنبيه عند الموعد.</small>`}
+if(h.t=='ext'&&h.k=='ex')b='<b>أمثلة على المجتمعات</b><p>• مجتمع الحي: مجموعات للإعلانات والجيران والخدمات.</p><p>• مجتمع المدرسة: مجموعة لكل صف مع قناة لإعلانات الإدارة.</p><p>• مجتمع العائلة: مجموعة للأعمام وأخرى للأقارب ومناسبات الأسرة.</p>';
+if(h.t=='ext'&&h.k=='accts'){const m=me();b=`<b>الحسابات</b><div class="row" style="padding:6px 0"><div class="av sm" data-u="${m.id}">${ini(m.name)}</div><b style="flex:1">${nm(m)}</b><span class="mu">✔</span></div><button class="btn" onclick="logout()">إضافة حساب / تبديل الحساب</button>`}
+return`<div class="sh" onclick="if(event.target==this){S.sheet=null;render()}"><div style="max-height:85vh;overflow:auto">${b}<button class="btn g" onclick="S.sheet=null;render()">إغلاق</button></div></div>`}
+
+/* ---- الإعدادات (الملف الشخصي + كل الأقسام) ---- */
+const SR=[['subs','subs','الاشتراكات','استكشاف مزايا مميزة'],['devices','devices','الأجهزة المرتبطة','استخدام حسابك على أجهزة أخرى'],['acct','key','الحساب','الاسم، النبذة، الرمز الرقمي، التوثيق'],['privacy','lock','الخصوصية','صورة الملف الشخصي'],['lists','lists','القوائم','إدارة الأشخاص والمجموعات'],
+['chatset','chat','الدردشات','سجل الدردشة، نسخة احتياطية'],['look','palette','الشكل','سمة الدردشة، لون التطبيق، سمة التطبيق'],['bc','bcast','رسائل جماعية','إدارة القوائم وإرسال الرسائل الجماعية'],['notif','bell','الإشعارات','نغمات الرسالة والمجموعة والمكالمة'],['storage','data','التخزين والبيانات','استعمال الشبكة، التنزيل التلقائي'],['parent','shield','عناصر تحكم ولي الأمر','إعدادات لعائلتك'],['access','access','الوصول','زيادة التباين، الخط الغامق'],['lang','globe','لغة التطبيق','العربية (لغة الجهاز)']];
+V.settings=function(){const m=me();if(!m)return V.auth();const q=(S.q||'').toLowerCase();
+const rows=()=>SR.filter(r=>!q||(r[2]+r[3]).toLowerCase().includes(q)).map(r=>`<div class="srow2" onclick="nav('${r[0]}',{q:'',sq:false})"><div class="t"><b>${r[2]}</b><small>${r[3]}</small></div><i>${ic(r[1])}</i></div>`).join('');
+return`<div class="prof"><div class="ptop"><button onclick="history.back()">${ic('back')}</button><span class="sp"></span><button onclick="nav('acct')">${ic('pencil')}</button><button onclick="S.sheet={t:'code'};render()">${ic('qr')}</button><button onclick="S.sq=!S.sq;if(!S.sq)S.q='';render();setTimeout(()=>{const e=$('sq');if(e)e.focus()},0)">${ic('search')}</button></div>
+<div class="bub2" onclick="nav('acct')">${esc(m.bio||'ماذا يحدث؟')}</div><div class="av pav" data-u="${m.id}" onclick="$('pf').click()">${ini(m.name)}</div></div>
+<div class="c" style="margin-top:84px"><button class="ib" style="margin:0 auto" onclick="S.sheet={t:'ext',k:'accts'};render()">⌄</button><h2 class="nm" style="margin:0">${nm(m)}</h2><div class="mu" dir="ltr" style="font-size:20px">@${esc(m.user)}</div></div>
+${S.sq?`<div class="pd" style="margin-top:10px"><div class="sbar">${ic('search')}<input id="sq" placeholder="بحث في الإعدادات" value="${esc(S.q||'')}" oninput="S.q=this.value;$('srs').innerHTML=rowsS()"></div></div>`:''}
+<div class="scr2" id="srs">${rows()}<div class="srow2" onclick="logout()"><div class="t"><b style="color:#e5484d">تسجيل الخروج</b></div><i>${ic('out')}</i></div><a class="srow2" href="admin.html" style="text-decoration:none;color:var(--mu)"><div class="t"><small>لوحة الإدارة</small></div></a></div>`};
+const rowsS=()=>{const q=(S.q||'').toLowerCase();return SR.filter(r=>!q||(r[2]+r[3]).toLowerCase().includes(q)).map(r=>`<div class="srow2" onclick="nav('${r[0]}',{q:'',sq:false})"><div class="t"><b>${r[2]}</b><small>${r[3]}</small></div><i>${ic(r[1])}</i></div>`).join('')+`<div class="srow2" onclick="logout()"><div class="t"><b style="color:#e5484d">تسجيل الخروج</b></div><i>${ic('out')}</i></div>`};
+V.subs=function(){const m=me();return hd2('الاشتراكات')+`<div class="pad"><div class="card"><b>توثيق الحساب</b>${m.verified?'<span>حسابك موثّق '+tick+'</span>':m.vreq?'<span class="mu">طلب التوثيق قيد المراجعة</span>':'<small class="mu">احصل على العلامة الزرقاء ليعرف الجميع أن حسابك حقيقي.</small><button class="btn" onclick="reqV()">طلب العلامة الزرقاء</button>'}</div><div class="card"><b>رصيدك</b><div style="font-size:30px">${m.bal}</div></div></div>`};
+V.lists=function(){const gs=mine().filter(c=>c.type=='group');return hd2('القوائم')+`<div class="pad"><div class="card"><b>الأشخاص</b><button class="btn" onclick="nav('contacts')">جهات الاتصال وإضافة شخص</button></div><div class="card"><b>المجموعات (${gs.length})</b>${gs.map(c=>`<div class="row" style="padding:4px 0" onclick="nav('chat',{chat:'${c.id}'})"><div class="av sm">${ini(c.name)}</div><b>${esc(c.name)}</b></div>`).join('')}<button class="btn g" onclick="nav('group')">مجموعة جديدة</button></div><div class="card"><b>المفضلة (${favs().length})</b><button class="btn g" onclick="nav('calls');setTimeout(()=>{S.sheet={t:'fav'};render()},0)">فتح المفضلة</button></div></div>`};
+V.look=function(){const cl=['#2e9e5b','#3390ec','#8e44ad','#e67e22','#e5484d','#16a085'];return hd2('الشكل')+`<div class="pad"><div class="card"><label class="sw"><span>الوضع الليلي</span><input type="checkbox" ${D.dark?'checked':''} onchange="D.dark=!D.dark;save();render()"></label></div><div class="card"><b>لون التطبيق</b><div class="ac">${cl.map(c=>`<div onclick="X.pr='${c}';sx();render()" style="width:46px;height:46px;border-radius:50%;background:${c};border:4px solid ${(X.pr||'#2e9e5b')==c?'var(--tx)':'transparent'}"></div>`).join('')}</div></div><div class="card"><b>خلفية المحادثة</b><div class="ac">${['#e6ebee','#dcebdc','#e6e0f0','#f1e9dc'].map((w,i)=>`<div onclick="D.wp=${i};save();render()" style="width:54px;height:54px;border-radius:12px;background:${w};border:3px solid ${(D.wp||0)==i?'var(--pr)':'transparent'}"></div>`).join('')}</div></div></div>`};
+V.chatset=function(){return hd2('الدردشات')+`<div class="pad"><div class="card"><b>حجم الخط</b><div class="ac">${[[14,'صغير'],[16,'عادي'],[18,'كبير']].map(f=>`<button class="btn s ${D.fs==f[0]?'':'g'}" onclick="D.fs=${f[0]};save();render()">${f[1]}</button>`).join('')}</div></div><div class="card"><b>نسخة احتياطية</b><small class="mu">تنزيل ملف بنص محادثاتك (بدون الصور والتسجيلات) إلى ملفات الهاتف.</small><button class="btn" onclick="exportChats()">تنزيل نسخة احتياطية</button></div><div class="card"><b>المؤرشفة</b><button class="btn g" onclick="nav('arch')">عرض المحادثات المؤرشفة</button></div></div>`};
+function exportChats(){const o=mine().map(c=>({chat:plain(c),msgs:vis(c).filter(m=>!m.del).map(m=>({from:(U(m.from)||{}).name,t:new Date(m.t).toISOString(),text:m.text||(m.kind?'['+m.kind+']':'')}))}));
+saveFile('data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(o,null,1)),'syriachat-backup.json')}
+V.notif=function(){return hd2('الإشعارات')+`<div class="pad"><div class="card"><label class="sw"><span>تفعيل الإشعارات</span><input type="checkbox" ${D.notif?'checked':''} onchange="D.notif=this.checked;save()"></label><label class="sw"><span>أصوات التنبيه داخل التطبيق</span><input type="checkbox" ${X.nosnd?'':'checked'} onchange="X.nosnd=!this.checked;sx()"></label><button class="btn s" onclick="beep(880,.15,2)">تجربة النغمة</button><button class="btn s g" onclick="nativeInit();showNote('تجربة','هذا إشعار تجريبي','t')">إشعار تجريبي</button><small class="mu">تصلك الإشعارات والتطبيق في الخلفية. للإشعار بعد الإغلاق التام يلزم خادم دفع (يُضاف لاحقاً).</small></div></div>`};
+V.parent=function(){return hd2('عناصر تحكم ولي الأمر')+`<div class="pad"><div class="card"><b>قفل التطبيق برمز</b><small class="mu">يُطلب الرمز عند فتح التطبيق وبعد عودتك إليه. الرمز محفوظ على هذا الجهاز فقط.</small>${X.pin?`<button class="btn r" onclick="X.pin='';sx();render();toast('أُزيل القفل')">إزالة القفل</button>`:`<input id="pin1" type="password" inputmode="numeric" maxlength="6" placeholder="رمز من 4 إلى 6 أرقام" dir="ltr"><button class="btn" onclick="const v=$('pin1').value;if(!/^\\d{4,6}$/.test(v))return toast('4 إلى 6 أرقام');X.pin=v;sx();render();toast('تم تفعيل القفل')">تفعيل القفل</button>`}</div><div class="card"><label class="sw"><span>إخفاء حالات الآخرين</span><input type="checkbox" ${X.hidest?'checked':''} onchange="X.hidest=this.checked;sx()"></label></div></div>`};
+V.access=function(){return hd2('الوصول')+`<div class="pad"><div class="card"><label class="sw"><span>زيادة التباين</span><input type="checkbox" ${X.hc?'checked':''} onchange="X.hc=this.checked;sx();render()"></label><label class="sw"><span>خط غامق</span><input type="checkbox" ${X.bold?'checked':''} onchange="X.bold=this.checked;sx();render()"></label></div><div class="card"><b>حجم الخط</b><div class="ac">${[[14,'صغير'],[16,'عادي'],[18,'كبير'],[21,'كبير جداً']].map(f=>`<button class="btn s ${D.fs==f[0]?'':'g'}" onclick="D.fs=${f[0]};save();render()">${f[1]}</button>`).join('')}</div></div></div>`};
+V.lang=function(){return hd2('لغة التطبيق')+`<div class="pad"><div class="card"><div class="sw"><b>العربية (لغة الجهاز)</b><span style="color:var(--pr)">✔</span></div><div class="sw mu"><span>English</span><small>قريباً</small></div><div class="sw mu"><span>Türkçe</span><small>قريباً</small></div></div></div>`};
+V.privacy=function(){return hd2('الخصوصية')+`<div class="pad">${phCard(me())}</div>`};
+function lockUI(){if(!X.pin||$('lk'))return;const d=document.createElement('div');d.id='lk';d.style.cssText='position:fixed;inset:0;background:var(--bg);color:var(--tx);z-index:99;display:grid;place-content:center;gap:14px;text-align:center;padding:30px';d.innerHTML='<h2>🔒 '+esc(D.cfg.appName)+'</h2><input id="lkp" type="password" inputmode="numeric" placeholder="أدخل الرمز" style="text-align:center" dir="ltr"><button class="btn" onclick="unlockUI()">فتح</button>';document.body.appendChild(d)}
+function unlockUI(){const p=$('lkp');if(p.value===X.pin){$('lk').remove()}else{p.value='';p.placeholder='رمز خاطئ'}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)X.lt=Date.now();else if(X.pin&&Date.now()-(X.lt||0)>60000)lockUI()});
+lockUI();
+{const r1=render;render=function(){r1();const rs=document.documentElement;if(X.pr)rs.style.setProperty('--pr',X.pr);rs.classList.toggle('hc',!!X.hc);rs.classList.toggle('bold',!!X.bold)}}
+
+(function(){const TABS=['auth','list','updates','comm','calls'];let stk=[],pop=0;
 const key=()=>S.v+'|'+(S.chat||'')+'|'+(S.sheet?S.sheet.t:''),snap=()=>({k:key(),v:S.v,chat:S.chat||null});
 stk.push(snap());try{history.replaceState({n:1},'')}catch(e){}
 const r0=render;render=function(){r0();if(pop)return;const k=key(),top=stk[stk.length-1];if(top&&k===top.k)return;

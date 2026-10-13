@@ -50,11 +50,27 @@ service cloud.firestore {
     }
 
     // الحالات (قصص) بحد أقصى أسبوع (مع سماح 5 دقائق لفرق الساعة)
+    // القنوات: الكل يقرأ ويتابع، وصاحب القناة فقط ينشر
+    match /channels/{id} {
+      allow read: if ok();
+      allow create: if ok() && request.resource.data.owner == request.auth.uid;
+      allow update: if isAdmin() || (ok() && resource.data.owner == request.auth.uid)
+        || (ok() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['followers']));
+      allow delete: if isAdmin() || (ok() && resource.data.owner == request.auth.uid);
+    }
+
     match /stories/{id} {
       allow read: if ok();
       allow create, update: if ok() && request.auth.uid == id
         && request.resource.data.exp > request.time
         && request.resource.data.exp <= request.time + duration.value(605100, 's');
+      allow delete: if isAdmin() || (ok() && request.auth.uid == id);
+    }
+
+    // مشاهدو الحالة: كل مشاهد يسجّل نفسه، وصاحب الحالة فقط يقرأ القائمة
+    match /stories/{id}/views/{v} {
+      allow create, update: if ok() && request.auth.uid == v;
+      allow read: if isAdmin() || (ok() && (request.auth.uid == id || request.auth.uid == v));
       allow delete: if isAdmin() || (ok() && request.auth.uid == id);
     }
 
