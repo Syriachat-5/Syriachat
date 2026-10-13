@@ -52,6 +52,12 @@ service cloud.firestore {
     // الحالات (قصص) بحد أقصى أسبوع (مع سماح 5 دقائق لفرق الساعة)
     // القنوات: الكل يقرأ ويتابع، وصاحب القناة فقط ينشر
     // بلاغات المستخدمين: أي مستخدم يرسل، والمشرف فقط يقرأ
+    // رموز الإشعارات (FCM): كل مستخدم يكتب رمزه فقط، والقراءة للخادم (Cloud Functions) فقط
+    match /tokens/{id} {
+      allow create, update, delete: if ok() && request.auth.uid == id;
+      allow read: if false;
+    }
+
     match /reports/{id} {
       allow create: if ok() && request.resource.data.by == request.auth.uid;
       allow read, delete: if isAdmin();
