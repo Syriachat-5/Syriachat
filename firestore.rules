@@ -51,6 +51,12 @@ service cloud.firestore {
 
     // الحالات (قصص) بحد أقصى أسبوع (مع سماح 5 دقائق لفرق الساعة)
     // القنوات: الكل يقرأ ويتابع، وصاحب القناة فقط ينشر
+    // بلاغات المستخدمين: أي مستخدم يرسل، والمشرف فقط يقرأ
+    match /reports/{id} {
+      allow create: if ok() && request.resource.data.by == request.auth.uid;
+      allow read, delete: if isAdmin();
+    }
+
     match /channels/{id} {
       allow read: if ok();
       allow create: if ok() && request.resource.data.owner == request.auth.uid;
