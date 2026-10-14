@@ -20,7 +20,7 @@ jobs:
 
       - name: Check required files
         run: |
-          for f in package.json capacitor.config.json icon-512.png index.html; do
+          for f in package.json capacitor.config.json icon-512.png index.html app4.js; do
             [ -f "$f" ] || { echo "::error::Missing file in repo root: $f"; exit 1; }
           done
 
@@ -30,8 +30,10 @@ jobs:
       - name: Copy web files into www
         run: |
           mkdir -p www
-          cp index.html firebase-config.js sw.js manifest.webmanifest icon-*.png www/ 2>/dev/null || true
+          cp index.html manifest.webmanifest icon-*.png www/ 2>/dev/null || true
+          cp *.js *.css www/ 2>/dev/null || true
           [ -d assets ] && cp -r assets www/ || true
+          ls -la www
 
       - name: Add Android project
         run: npx cap add android
@@ -39,7 +41,8 @@ jobs:
       - name: Permissions
         run: |
           M=android/app/src/main/AndroidManifest.xml
-          sed -i 's#</manifest>#<uses-permission android:name="android.permission.CAMERA"/><uses-permission android:name="android.permission.RECORD_AUDIO"/><uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/><uses-permission android:name="android.permission.POST_NOTIFICATIONS"/></manifest>#' $M
+          sed -i 's#</manifest>#<uses-permission android:name="android.permission.INTERNET"/><uses-permission android:name="android.permission.CAMERA"/><uses-permission android:name="android.permission.RECORD_AUDIO"/><uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/><uses-permission android:name="android.permission.POST_NOTIFICATIONS"/><uses-feature android:name="android.hardware.camera" android:required="false"/><uses-feature android:name="android.hardware.microphone" android:required="false"/></manifest>#' $M
+          grep -c "RECORD_AUDIO" $M
 
       - name: App icon
         run: |
