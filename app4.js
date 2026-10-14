@@ -18,7 +18,12 @@ const rearm=()=>{try{history.pushState({s:1},'')}catch(e){}};
 try{history.replaceState({s:0},'');history.pushState({s:1},'')}catch(e){}
 window.addEventListener('popstate',()=>{if(handleBack())return rearm();
 if(Date.now()-exitT<2200){const A=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.App;if(A&&A.exitApp)A.exitApp();else history.back();return}
-exitT=Date.now();toast('اضغط رجوع مرة أخرى للخروج');rearm()})})();
+exitT=Date.now();toast('اضغط رجوع مرة أخرى للخروج');rearm()});
+/* زر الرجوع الأصلي في أندرويد (Capacitor App) */
+try{const A=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.App;if(A&&A.addListener)A.addListener('backButton',()=>{if(handleBack())return;if(Date.now()-exitT<2200){A.exitApp&&A.exitApp();return}exitT=Date.now();toast('اضغط رجوع مرة أخرى للخروج')})}catch(e){}
+})();
+/* تخفيف إعادة الرسم: أول تحديث فوراً، والتحديثات المتلاحقة تُدمج */
+(function(){const u0=ui;let last=0,tm=0;ui=function(){const n=Date.now();if(n-last>250){last=n;clearTimeout(tm);tm=0;return u0()}if(tm)return;tm=setTimeout(()=>{tm=0;last=Date.now();u0()},250-(n-last))}})();
 render();
 
 
