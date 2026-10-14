@@ -91,3 +91,5 @@ return h.replace('<div id="msgs"',()=>bar+'<div id="msgs"')};
 const _r7=render;render=function(){
 if(!READY7||(!D.me&&AL&&!AUTOFAIL7&&getCred())){document.documentElement.dataset.theme=D.dark?'dark':'light';$('app').innerHTML='<div style="display:flex;min-height:100dvh;align-items:center;justify-content:center;font-size:42px">⏳</div>';return}
 _r7();fix9();spkBtn7()};
+
+;(window.__ck=window.__ck||[]).push(4);
