@@ -87,9 +87,30 @@ return h.replace('<div id="msgs"',()=>bar+'<div id="msgs"')};
 #spk.on{background:#fff!important;color:#111!important}
 `;document.head.appendChild(s)})();
 
-/* 7) غلاف render النهائي */
+/* 7) أزرار الرجوع: سجل تنقّل حقيقي (nav لا يحفظ تاريخاً فكان history.back() بلا أثر) */
+const ROOT7=['list','updates','comm','calls'],GATE7=['auth','wait','pending','rejected','setup'];
+let NK7='',NPREV7=null,NPOP7=0,NST7=[];
+const ns7=()=>({v:S.v,chat:S.chat,ch:S.ch});
+function track7(){const k=S.v+'|'+(S.chat||'')+'|'+(S.ch||'');
+if(NK7===''){NK7=k;NPREV7=ns7();return}
+if(k===NK7)return;
+if(ROOT7.includes(S.v)||GATE7.includes(S.v))NST7=[];
+else if(!NPOP7&&NPREV7){NST7.push(NPREV7);try{history.pushState({n:NST7.length},'')}catch(e){}}
+NK7=k;NPREV7=ns7()}
+function back7(fromPop){
+if(S.sheet){S.sheet=null;if(fromPop){try{history.pushState({n:0},'')}catch(e){}}return render()}
+const p=NST7.pop();
+if(!p){if(!ROOT7.includes(S.v)&&!GATE7.includes(S.v)){NPOP7=1;S.v='list';S.sheet=null;render();NPOP7=0}return false}
+NPOP7=1;Object.assign(S,{v:p.v,chat:p.chat,ch:p.ch,sheet:null});render();NPOP7=0;return true}
+window.addEventListener('popstate',()=>back7(true));
+/* زر الرجوع الخلفي في تطبيق أندرويد (Capacitor) */
+try{const A=PL('App');if(A&&A.addListener)A.addListener('backButton',()=>{if(S.sheet||NST7.length)return back7();if(!ROOT7.includes(S.v)&&!GATE7.includes(S.v))return back7();if(A.exitApp)A.exitApp()})}catch(e){}
+/* أسهم الرجوع في شاشات التسجيل (goBack كانت غير معرّفة) */
+goBack=function(){if(S.v=='setup'&&S.ss==2){S.ss=1;return render()}S.ob=S.ob=='legacy'?'login':'welcome';render()};
+
+/* 8) غلاف render النهائي */
 const _r7=render;render=function(){
 if(!READY7||(!D.me&&AL&&!AUTOFAIL7&&getCred())){document.documentElement.dataset.theme=D.dark?'dark':'light';$('app').innerHTML='<div style="display:flex;min-height:100dvh;align-items:center;justify-content:center;font-size:42px">⏳</div>';return}
-_r7();fix9();spkBtn7()};
+_r7();fix9();spkBtn7();track7()};
 
 ;(window.__ck=window.__ck||[]).push(4);
