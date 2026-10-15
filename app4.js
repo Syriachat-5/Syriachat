@@ -42,13 +42,29 @@ Object.assign(IX,{spk:'<path d="M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5
 let SPK7=0;
 function spkBtn7(){const u=$('callui'),m=$('cm');if(!u||!m||$('spk'))return;
 const b=document.createElement('button');b.id='spk';b.type='button';b.className=m.className.replace(/\boff\b/,'').trim();b.innerHTML=ix('spk');b.title='مكبّر الصوت';b.onclick=togSpk7;m.parentNode.insertBefore(b,m)}
-async function togSpk7(){const v=$('rv'),b=$('spk');SPK7=!SPK7;if(b)b.classList.toggle('on',!!SPK7);let ok=false;
+async function togSpk7(){const v=$('rv'),b=$('spk');SPK7=!SPK7;if(b)b.classList.toggle('on',!!SPK7);route7();let ok=false;
 try{if(v&&v.setSinkId&&navigator.mediaDevices&&navigator.mediaDevices.enumerateDevices){
 const o=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind=='audiooutput');
 const sp=o.find(d=>/speaker|loud|مكبر/i.test(d.label)),ea=o.find(d=>/earpiece|handset|phone|سماعة الأذن/i.test(d.label))||o.find(d=>d.deviceId=='default'),t=SPK7?sp:ea;
 if(t){await v.setSinkId(t.deviceId);ok=true}}}catch(e){}
 toast(ok?(SPK7?'مكبّر الصوت مفعّل':'السماعة الأذنية'):'تعذر تبديل المخرج من داخل التطبيق، استخدم أزرار الصوت في الهاتف')}
-const _cu7=callUI;callUI=function(on,name,v){_cu7(on,name,v);SPK7=0;const b=$('spk');if(b)b.classList.remove('on');if(on)spkBtn7()};
+/* حالة الاتصال: يرن (الطرف متصل بالتطبيق) / يتصل (خارج التطبيق) + نغمة رنين تُسمع للمتّصِل */
+let OUT7=0,RBT7=null;
+const _sc7=startCall;startCall=async function(t,o){OUT7=1;try{return await _sc7(t,o)}finally{if(!PC)OUT7=0}};
+const _ac7=answerCall;answerCall=function(){OUT7=0;return _ac7()};
+function callStatus7(){if(!OUT7||CTI)return;const e=$('cs');if(e&&CALLU)e.textContent=online(CALLU)?'يرن':'يتصل'}
+async function route7(){try{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();
+if(AC.setSinkId&&navigator.mediaDevices&&navigator.mediaDevices.enumerateDevices){
+const o=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind=='audiooutput');
+const sp=o.find(d=>/speaker|loud|مكبر/i.test(d.label)),ea=o.find(d=>/earpiece|handset|phone|سماعة الأذن/i.test(d.label))||o.find(d=>d.deviceId=='default'),t=SPK7?sp:ea;
+if(t)await AC.setSinkId(t.deviceId)}}catch(e){}}
+function rbTone7(){const v=SPK7?.45:.04;tn(440,1.2,0,v);tn(480,1.2,0,v)}/* السماعة الداخلية: هادئ · المكبّر: عالٍ */
+function rbStop7(){clearInterval(RBT7);RBT7=null}
+function rbStart7(){rbStop7();if(!OUT7)return;route7();rbTone7();RBT7=setInterval(()=>{const u=$('callui');if(CTI||!OUT7||!u||u.style.display=='none')return rbStop7();rbTone7()},3200)}
+setInterval(()=>{const u=$('callui');if(OUT7&&!CTI&&u&&u.style.display!='none')callStatus7()},1500);
+const _cc7=callConnected;callConnected=function(){rbStop7();return _cc7()};
+const _cu7=callUI;callUI=function(on,name,v){_cu7(on,name,v);SPK7=0;const b=$('spk');if(b)b.classList.remove('on');
+if(on){spkBtn7();callStatus7();rbStart7()}else{OUT7=0;rbStop7()}};
 
 /* 4) حفظ أسماء جهات الاتصال (على هذا الجهاز) */
 const CNK='tgcn';
