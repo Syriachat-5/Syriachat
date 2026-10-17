@@ -1,53 +1,49 @@
-// إشعارات SyriaChat عند إغلاق التطبيق: رسائل ومكالمات عبر FCM
-const functions = require('firebase-functions/v1');
+/* إشعار المكالمات الواردة والتطبيق مغلق (FCM) */
+const { onDocumentCreated } = require('firebase-functions/v2/firestore');
 const admin = require('firebase-admin');
 admin.initializeApp();
 const db = admin.firestore();
 
-async function send(uid, from, chatId, msg) {
-  const s = await db.doc('tokens/' + uid).get();
-  const t = s.exists ? s.data() : null;
+exports.onCall = onDocumentCreated('calls/{id}', async (event) => {
+  const c = event.data && event.data.data();
+  if (!c || c.status !== 'ringing' || !c.to || !c.from) return;
+  if (Date.now() - (c.t || 0) > 60000) return;
+
+  const tk = await db.doc('tokens/' + c.to).get();
+  const t = tk.exists ? tk.data() : null;
   if (!t || !t.t) return;
-  if ((t.blk || []).includes(from)) return;           // الحظر
-  if (chatId && (t.mute || []).includes(chatId) && msg.data.type === 'msg') return; // الكتم
-  if (chatId && (t.priv || []).includes(chatId) && msg.notification) msg.notification.body = 'رسالة جديدة';
-  try { await admin.messaging().send({ token: t.t, ...msg }); }
-  catch (e) {
-    if (/registration-token-not-registered|invalid-argument|invalid-registration/.test(e.code || ''))
-      await db.doc('tokens/' + uid).delete().catch(() => {});
-  }
-}
-const nameOf = async (uid) => ((await db.doc('users/' + uid).get()).data() || {}).name || 'SyriaChat';
-const bodyOf = (m) => m.del ? '' : m.kind === 'img' ? '📷 صورة' : m.kind === 'aud' ? '🎤 رسالة صوتية'
-  : m.kind === 'doc' ? '📄 مستند' : m.kind === 'loc' ? '📍 موقع' : m.kind === 'poll' ? '📊 استطلاع'
-  : m.kind === 'evt' ? '📅 مناسبة' : m.kind === 'con' ? '👤 جهة اتصال' : m.pay ? '💸 دفعة' : (m.text || '');
+  if ((t.blk || []).includes(c.from)) return;
 
-exports.onMessage = functions.firestore.document('chats/{id}').onUpdate(async (chg, ctx) => {
-  const b = chg.before.data(), a = chg.after.data();
-  const nb = (b.msgs || []).length, na = (a.msgs || []).length;
-  if (na <= nb) return;
-  const fresh = a.msgs.slice(nb).slice(-3);
-  for (const m of fresh) {
-    const sender = await nameOf(m.from);
-    const title = a.type === 'group' ? (a.name || 'مجموعة') + ' · ' + sender : sender;
-    for (const uid of (a.members || []).filter((u) => u !== m.from)) {
-      await send(uid, m.from, ctx.params.id, {
-        notification: { title, body: bodyOf(m) },
-        data: { type: 'msg', chat: ctx.params.id },
-        android: { priority: 'high', notification: { channelId: 'msgs', tag: ctx.params.id } },
-      });
+  const u = await db.doc('users/' + c.from).get();
+  const name = (u.exists && u.data().name) || 'مكالمة';
+  const video = c.type === 'video';
+
+  try {
+    await admin.messaging().send({
+      token: t.t,
+      data: { kind: 'call', callId: event.params.id, from: c.from, type: c.type || 'audio', name },
+      notification: {
+        title: '📞 ' + name,
+        body: video ? 'مكالمة فيديو واردة' : 'مكالمة صوتية واردة'
+      },
+      android: {
+        priority: 'high',
+        ttl: 45000,
+        notification: {
+          channelId: 'calls',
+          tag: 'call',
+          sound: 'default',
+          priority: 'max',
+          visibility: 'public',
+          defaultVibrateTimings: true,
+          sticky: true
+        }
+      }
+    });
+  } catch (e) {
+    if (e.code === 'messaging/registration-token-not-registered') {
+      await db.doc('tokens/' + c.to).update({ t: admin.firestore.FieldValue.delete() }).catch(() => {});
     }
+    console.error('push failed', e.code || e);
   }
-});
-
-exports.onCall = functions.firestore.document('calls/{id}').onCreate(async (snap, ctx) => {
-  const d = snap.data();
-  if (d.status !== 'ringing' || !d.to) return;
-  const name = await nameOf(d.from);
-  await send(d.to, d.from, null, {
-    notification: { title: '📞 ' + name, body: d.type === 'video' ? 'مكالمة فيديو واردة' : 'مكالمة صوتية واردة' },
-    data: { type: 'call', call: ctx.params.id },
-    android: { priority: 'high', ttl: 45000,
-      notification: { channelId: 'calls', priority: 'max', visibility: 'public', defaultVibrateTimings: true, sound: 'default' } },
-  });
 });
