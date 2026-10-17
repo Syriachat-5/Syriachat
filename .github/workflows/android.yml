@@ -25,7 +25,13 @@ jobs:
           done
 
       - name: Install Capacitor
-        run: npm install
+        run: |
+          npm install
+          V=$(node -p "try{require('./node_modules/@capacitor/core/package.json').version.split('.')[0]}catch(e){''}")
+          [ -z "$V" ] && V=6
+          echo "Capacitor major: $V"
+          npm install @capacitor/core@$V @capacitor/cli@$V @capacitor/android@$V @capacitor/push-notifications@$V @capacitor/local-notifications@$V @capacitor/app@$V @capacitor/camera@$V @capacitor/geolocation@$V
+          npx cap --version
 
       - name: Copy web files into www
         run: |
@@ -41,8 +47,19 @@ jobs:
       - name: Permissions
         run: |
           M=android/app/src/main/AndroidManifest.xml
-          sed -i 's#</manifest>#<uses-permission android:name="android.permission.INTERNET"/><uses-permission android:name="android.permission.CAMERA"/><uses-permission android:name="android.permission.RECORD_AUDIO"/><uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/><uses-permission android:name="android.permission.POST_NOTIFICATIONS"/><uses-feature android:name="android.hardware.camera" android:required="false"/><uses-feature android:name="android.hardware.microphone" android:required="false"/></manifest>#' $M
+          sed -i 's#</manifest>#<uses-permission android:name="android.permission.INTERNET"/><uses-permission android:name="android.permission.CAMERA"/><uses-permission android:name="android.permission.RECORD_AUDIO"/><uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/><uses-permission android:name="android.permission.POST_NOTIFICATIONS"/><uses-permission android:name="android.permission.VIBRATE"/><uses-permission android:name="android.permission.WAKE_LOCK"/><uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/><uses-feature android:name="android.hardware.camera" android:required="false"/><uses-feature android:name="android.hardware.microphone" android:required="false"/></manifest>#' $M
+          sed -i '0,/<activity/s#<activity#<activity android:showWhenLocked="true" android:turnScreenOn="true"#' $M
           grep -c "RECORD_AUDIO" $M
+          grep -c "showWhenLocked" $M
+
+      - name: Firebase push config (optional)
+        run: |
+          if [ -f google-services.json ]; then
+            cp google-services.json android/app/google-services.json
+            echo "google-services.json copied"
+          else
+            echo "::warning::google-services.json not found in repo root - push notifications disabled"
+          fi
 
       - name: App icon
         run: |
